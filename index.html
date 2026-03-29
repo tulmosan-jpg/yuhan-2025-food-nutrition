@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>임산부 영양소 섭취 계산기 | 2025 KDRI</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FDF6F0;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #FFF8F3;
+  --accent: #D4826A;
+  --accent-deep: #B8604A;
+  --accent-light: #F2D4C8;
+  --accent-glow: rgba(212,130,106,0.12);
+  --text: #3A2E2A;
+  --text-sub: #8A7B75;
+  --text-light: #B5A8A2;
+  --border: #EDE3DC;
+  --green: #6B9E78;
+  --green-bg: #EDF5EF;
+  --blue: #6889A8;
+  --blue-bg: #EBF1F6;
+  --yellow: #C4A24E;
+  --yellow-bg: #FBF5E6;
+  --purple: #9B7EB8;
+  --purple-bg: #F3EEF8;
+  --danger: #C75B5B;
+  --danger-bg: #FCEAEA;
+  --shadow-sm: 0 1px 3px rgba(58,46,42,0.06);
+  --shadow-md: 0 4px 16px rgba(58,46,42,0.08);
+  --shadow-lg: 0 8px 32px rgba(58,46,42,0.10);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── Top Bar ── */
+.top-bar {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  padding: 36px 24px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.top-bar::before {
+  content: '';
+  position: absolute;
+  top: -60%; left: -20%;
+  width: 140%; height: 200%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 70%);
+}
+.top-bar h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: #fff;
+  font-weight: 700;
+  position: relative;
+}
+.top-bar p {
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 300;
+  position: relative;
+}
+.badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 8px;
+  position: relative;
+}
+
+.container {
+  max-width: 820px;
+  margin: -24px auto 40px;
+  padding: 0 16px;
+  position: relative;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.card h2 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h2 .icon {
+  width: 30px; height: 30px;
+  background: var(--accent-glow);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+
+/* ── Forms ── */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.form-grid.col4 { grid-template-columns: repeat(4, 1fr); }
+.form-grid.col2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-grid.col4 { grid-template-columns: repeat(2, 1fr); }
+  .form-grid.col2 { grid-template-columns: 1fr; }
+}
+.form-group { margin-bottom: 4px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group select,
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  line-height: 1.4;
+  min-height: 44px;
+}
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7B75' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { opacity: 1; }
+.unit-hint {
+  font-size: 10px;
+  color: var(--text-light);
+  margin-top: 3px;
+}
+
+/* ── BMI Indicator ── */
+.bmi-bar {
+  margin-top: 8px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: none;
+}
+.bmi-bar.show { display: flex; align-items: center; gap: 10px; }
+.bmi-bar .bmi-label {
+  font-size: 11px;
+  color: var(--text-sub);
+  white-space: nowrap;
+}
+.bmi-bar .bmi-val {
+  font-size: 14px;
+  font-weight: 700;
+}
+.bmi-bar .bmi-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.bmi-under { background: var(--blue-bg); color: var(--blue); }
+.bmi-normal { background: var(--green-bg); color: var(--green); }
+.bmi-over { background: var(--yellow-bg); color: var(--yellow); }
+.bmi-obese { background: var(--danger-bg); color: var(--danger); }
+.weight-gain-bar {
+  margin-top: 8px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+}
+.weight-gain-bar.show { display: flex; }
+.weight-gain-bar .wg-label { font-size: 11px; color: var(--text-sub); white-space: nowrap; }
+.weight-gain-bar .wg-val { font-size: 14px; font-weight: 700; color: var(--green); }
+.weight-gain-bar .wg-status { font-size: 11px; color: var(--text-sub); }
+
+/* ── Period Selector ── */
+.period-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (max-width: 500px) {
+  .period-selector { grid-template-columns: repeat(2, 1fr); }
+}
+.period-btn {
+  padding: 11px 6px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.period-btn .label { font-size: 12px; font-weight: 600; color: var(--text); display: block; }
+.period-btn .sub { font-size: 10px; color: var(--text-light); margin-top: 1px; display: block; }
+.period-btn:hover { border-color: var(--accent-light); background: var(--bg-card-alt); }
+.period-btn.active {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(212,130,106,0.06), rgba(212,130,106,0.12));
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.period-btn.active .label { color: var(--accent-deep); }
+
+/* ── Button ── */
+.btn-calc {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+  margin-top: 8px;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.period-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn-calc:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,130,106,0.35); }
+.btn-calc:active { transform: translateY(0); }
+
+/* ── Results ── */
+#results { display: none; }
+#results.show { display: block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(12px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+.result-header {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.rh-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.profile-icon {
+  width: 44px; height: 44px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.rh-info { flex: 1; }
+.rh-info .name { font-size: 14px; font-weight: 700; }
+.rh-info .detail { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+.rh-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 500px) { .rh-stats { grid-template-columns: repeat(2, 1fr); } }
+.rh-stat { text-align: center; }
+.rh-stat .sv { font-size: 16px; font-weight: 700; }
+.rh-stat .sl { font-size: 10px; color: var(--text-sub); }
+
+/* Key cards */
+.key-nutrients {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 500px) { .key-nutrients { grid-template-columns: repeat(2, 1fr); } }
+.key-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.key-card .kc-value { font-size: 22px; font-weight: 800; margin: 3px 0; }
+.key-card .kc-label { font-size: 11px; color: var(--text-sub); font-weight: 500; }
+.key-card .kc-unit { font-size: 10px; color: var(--text-light); }
+.key-card.energy { border-color: var(--accent-light); }
+.key-card.energy .kc-value { color: var(--accent-deep); }
+.key-card.protein .kc-value { color: var(--green); }
+.key-card.folate .kc-value { color: var(--purple); }
+
+/* Alerts */
+.alert-card {
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.alert-card .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.alert-card .alert-text { font-size: 12px; line-height: 1.6; }
+.alert-card .alert-text strong { font-weight: 600; }
+.alert-danger { background: var(--danger-bg); border: 1px solid #f0d0d0; }
+.alert-danger .alert-text { color: var(--danger); }
+.alert-info { background: var(--blue-bg); border: 1px solid #d0dfe9; }
+.alert-info .alert-text { color: var(--blue); }
+.alert-warn { background: var(--yellow-bg); border: 1px solid #e8dfc0; }
+.alert-warn .alert-text { color: #9a8030; }
+.alert-green { background: var(--green-bg); border: 1px solid #c4dcc9; }
+.alert-green .alert-text { color: #4a7a54; }
+
+/* Section title */
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 20px 0 10px;
+  padding-left: 4px;
+}
+
+/* Nutrient rows */
+.nutrient-grid { display: grid; gap: 6px; }
+.nutrient-row {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr 0.5fr 1fr;
+  align-items: center;
+  gap: 8px;
+  transition: box-shadow 0.15s;
+}
+.nutrient-row:hover { box-shadow: var(--shadow-sm); }
+.nutrient-row .n-name { font-size: 13px; font-weight: 600; }
+.nutrient-row .n-type { font-size: 9px; color: var(--text-light); font-weight: 400; }
+.nutrient-row .n-base { font-size: 11px; color: var(--text-light); text-align: right; }
+.nutrient-row .n-add { font-size: 11px; color: var(--accent-deep); font-weight: 600; text-align: right; }
+.nutrient-row .n-total {
+  font-size: 14px;
+  font-weight: 700;
+  background: var(--bg);
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-align: right;
+}
+.nutrient-row .n-total .n-unit { font-size: 9px; color: var(--text-sub); }
+.nutrient-row.highlight { border-color: var(--accent-light); background: var(--bg-card-alt); }
+.nutrient-row.highlight .n-total { background: var(--accent-light); color: var(--accent-deep); }
+
+/* EER formula box */
+.formula-box {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border: 1px dashed var(--border);
+}
+.formula-box .fb-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+.formula-box code {
+  display: block;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text);
+  word-break: break-all;
+  font-family: 'Noto Sans KR', monospace;
+}
+.formula-box .fb-note {
+  font-size: 10px;
+  color: var(--text-light);
+  margin-top: 6px;
+}
+
+/* Deficiency */
+.deficiency-list { display: grid; gap: 6px; }
+.def-item {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.def-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.def-dot.high { background: var(--danger); }
+.def-dot.mid { background: var(--yellow); }
+.def-content { flex: 1; }
+.def-name { font-size: 13px; font-weight: 600; }
+.def-reason { font-size: 11px; color: var(--text-sub); margin-top: 1px; }
+
+.footer-note {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-light);
+  padding: 20px 16px 36px;
+  line-height: 1.7;
+}
+@media print {
+  .top-bar { padding: 16px; }
+  .card:has(.btn-calc) { display: none; }
+  #results { display: block !important; }
+}
+
+/* ── Nutrient Info Accordion ── */
+.info-section { margin-bottom: 16px; }
+.info-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 20px 0 8px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.accordion-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+.accordion-header {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 48px;
+}
+.accordion-header:hover { background: var(--bg-card-alt); }
+.accordion-header.open { background: var(--bg-card-alt); }
+.accordion-header .ah-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+.accordion-header .ah-tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  background: var(--accent-glow);
+  color: var(--accent-deep);
+}
+.accordion-header .ah-arrow {
+  font-size: 11px;
+  color: var(--text-light);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.accordion-header.open .ah-arrow { transform: rotate(180deg); }
+.accordion-body {
+  display: none;
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--border);
+}
+.accordion-body.open { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.ab-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ab-row:first-child { margin-top: 12px; }
+.ab-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.ab-content { flex: 1; }
+.ab-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+.ab-text { font-size: 12px; color: var(--text); line-height: 1.6; }
+.ab-foods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.food-tag {
+  font-size: 11px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--text-sub);
+}
+
+/* ── Credits ── */
+.credits-card {
+  background: linear-gradient(135deg, rgba(212,130,106,0.06), rgba(212,130,106,0.12));
+  border: 1px solid var(--accent-light);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.credits-card .credits-univ {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-deep);
+  margin-bottom: 4px;
+}
+.credits-card .credits-dept {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+}
+.credits-card .credits-members {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.member-chip {
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-light);
+  color: var(--accent-deep);
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>🤰 임산부 영양소 계산기</h1>
+  <p>2025 한국인 영양소 섭취기준 (KDRI) 기반 · 개인 맞춤 계산</p>
+  <span class="badge">보건복지부 · 한국영양학회</span>
+</div>
+
+<div class="container">
+
+  <!-- ── 신체 정보 ── -->
+  <div class="card">
+    <h2><span class="icon">📏</span> 신체 정보</h2>
+    <div class="form-grid col4">
+      <div class="form-group">
+        <label>나이</label>
+        <input type="number" id="age" value="30" min="19" max="64" step="1" inputmode="numeric">
+        <div class="unit-hint">만 나이 (19~64세)</div>
+      </div>
+      <div class="form-group">
+        <label>키</label>
+        <input type="number" id="height" value="161" min="130" max="190" step="0.1" inputmode="decimal">
+        <div class="unit-hint">cm</div>
+      </div>
+      <div class="form-group">
+        <label>임신 전 체중</label>
+        <input type="number" id="weight" value="56" min="35" max="130" step="0.1" inputmode="decimal">
+        <div class="unit-hint">kg (임신 전 기준)</div>
+      </div>
+      <div class="form-group">
+        <label>현재 체중</label>
+        <input type="number" id="currentWeight" placeholder="선택" min="35" max="160" step="0.1" inputmode="decimal">
+        <div class="unit-hint">kg (현재, 선택입력)</div>
+      </div>
+    </div>
+    <div class="bmi-bar" id="bmiBar">
+      <span class="bmi-label">임신 전 BMI</span>
+      <span class="bmi-val" id="bmiVal">-</span>
+      <span class="bmi-status" id="bmiStatus">-</span>
+      <span style="flex:1"></span>
+      <span class="bmi-label" id="bmiGroup" style="font-size:10px;color:var(--text-light)"></span>
+    </div>
+    <div class="weight-gain-bar" id="weightGainBar">
+      <span class="wg-label">체중 증가량</span>
+      <span class="wg-val" id="weightGainVal">-</span>
+      <span class="wg-status" id="weightGainStatus"></span>
+    </div>
+  </div>
+
+  <!-- ── 활동/시기 ── -->
+  <div class="card">
+    <h2><span class="icon">⚙️</span> 활동량 · 시기</h2>
+    <div class="form-grid col2" style="margin-bottom:14px">
+      <div class="form-group">
+        <label>구분</label>
+        <select id="status">
+          <option value="preg">임신부</option>
+          <option value="lact">수유부</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>신체활동수준 (PA)</label>
+        <select id="pa">
+          <option value="sedentary">비활동적 (좌식 생활)</option>
+          <option value="low" selected>저활동적 (일상 보행, KDRI 기본)</option>
+          <option value="active">활동적 (규칙적 운동)</option>
+          <option value="very">매우 활동적 (고강도 운동)</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="periodWrap">
+      <label style="display:block;font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.5px">임신 시기</label>
+      <div class="period-selector" id="periodBtns">
+        <button class="period-btn" data-period="t1" onclick="selectPeriod(this)">
+          <span class="label">임신 1기</span><span class="sub">1~12주</span>
+        </button>
+        <button class="period-btn active" data-period="t2" onclick="selectPeriod(this)">
+          <span class="label">임신 2기</span><span class="sub">13~27주</span>
+        </button>
+        <button class="period-btn" data-period="t3" onclick="selectPeriod(this)">
+          <span class="label">임신 3기</span><span class="sub">28주~출산</span>
+        </button>
+        <button class="period-btn" data-period="lact" onclick="selectPeriod(this)" style="display:none">
+          <span class="label">수유기</span><span class="sub">출산 후</span>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn-calc" onclick="calculate()">🔍 맞춤 계산하기</button>
+  </div>
+
+  <div id="results"></div>
+
+  <!-- ── 영양소 정보 사전 ── -->
+  <div class="card" style="margin-top:8px">
+    <h2><span class="icon">📚</span> 영양소 효과 &amp; 급원식품 사전</h2>
+    <p style="font-size:12px;color:var(--text-sub);margin-bottom:16px">각 영양소를 클릭하면 주요 효과와 급원식품을 확인할 수 있습니다. (출처: 한국영양학회 2025 KDRI)</p>
+
+    <div class="info-section-title">⚡ 에너지·다량영양소</div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">단백질 (Protein)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">근육·조직·장기 합성 및 유지, 효소·항체·호르몬 구성, 체액 pH 조절, 태아의 세포 분열과 성장에 필수적인 역할을 합니다. 임신 중 혈액량 증가와 태반 형성에도 충분한 단백질 공급이 필요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">쇠고기·돼지고기</span><span class="food-tag">닭가슴살</span><span class="food-tag">생선·어패류</span><span class="food-tag">달걀</span><span class="food-tag">두부·콩류</span><span class="food-tag">우유·유제품</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">탄수화물 (Carbohydrate)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">뇌와 신경계의 주요 에너지원(포도당)으로, 단백질 절약 작용을 합니다. 임신 중 태아의 뇌 발달과 신체 성장을 위한 안정적인 혈당 유지에 중요합니다. 최소 섭취 기준(EAR 100g)은 뇌 기능 유지를 위한 최소량입니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">쌀밥·잡곡밥</span><span class="food-tag">빵·면류</span><span class="food-tag">감자·고구마</span><span class="food-tag">과일류</span><span class="food-tag">옥수수</span><span class="food-tag">시리얼</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">식이섬유 (Dietary Fiber)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">장 운동 촉진으로 임신 중 흔한 변비를 예방·완화합니다. 혈당 급상승 억제, 혈중 콜레스테롤 저하, 장내 유익균 증식(프리바이오틱스)에 기여합니다. 임신성 당뇨 예방에도 도움이 됩니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">채소류(시금치·브로콜리)</span><span class="food-tag">과일류(사과·배)</span><span class="food-tag">콩류·두류</span><span class="food-tag">전곡류(귀리·현미)</span><span class="food-tag">해조류</span><span class="food-tag">버섯류</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">EPA + DHA (오메가-3)</span>
+        <span class="ah-tag">총섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">DHA는 태아 뇌와 망막 발달에 필수적입니다. EPA는 항염증 작용과 혈전 예방에 도움을 주며, 임신성 고혈압 위험을 낮출 수 있습니다. 조산 위험 감소와 태아 출생체중 개선에도 긍정적인 효과가 보고되고 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">고등어</span><span class="food-tag">연어</span><span class="food-tag">정어리·청어</span><span class="food-tag">참치(통조림)</span><span class="food-tag">멸치</span><span class="food-tag">DHA 강화 달걀</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">수분 (Water)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">체온 조절, 영양소·노폐물 운반, 관절 윤활에 필수적입니다. 임신 중 혈액량 증가(약 50%), 태반과 양수 형성, 태아 영양소 공급을 위해 수분 요구량이 크게 증가합니다. 탈수는 조기 진통과 연관될 수 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">음용수(물)</span><span class="food-tag">국·찌개·탕류</span><span class="food-tag">과일류</span><span class="food-tag">채소류</span><span class="food-tag">우유·음료</span><span class="food-tag">두부·豆腐류</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="info-section-title">🌟 지용성 비타민</div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 A (Retinol)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">시각 기능(특히 야간 시력), 피부·점막 건강, 면역 기능에 필수적입니다. 태아의 기관 형성(심장·눈·폐·신장)에 중요한 역할을 합니다. 단, 동물성 비타민 A(레티놀)는 과잉 시 기형 위험이 있으므로 상한섭취량(3000µgRAE) 이하로 섭취해야 합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">간(동물 내장)</span><span class="food-tag">달걀노른자</span><span class="food-tag">당근</span><span class="food-tag">단호박</span><span class="food-tag">시금치·케일</span><span class="food-tag">고구마</span><span class="food-tag">망고</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 D (Calciferol)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">칼슘·인의 흡수를 촉진하여 태아 뼈·치아 형성에 핵심적인 역할을 합니다. 면역 조절, 세포 증식 억제, 인슐린 분비 조절에도 관여합니다. 임신 중 비타민 D 결핍은 구루병, 저체중출생아, 임신성 당뇨와 연관됩니다. 한국인은 식품 섭취만으로 충족이 어려워 햇빛 노출이 중요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">연어·청어</span><span class="food-tag">고등어</span><span class="food-tag">달걀노른자</span><span class="food-tag">UV 노출 버섯</span><span class="food-tag">강화 우유</span><span class="food-tag">☀️ 햇빛 합성</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 E (Tocopherol)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">강력한 항산화제로 세포막의 불포화지방산을 산화적 손상으로부터 보호합니다. 면역 기능 유지, 혈소판 응집 억제에 기여합니다. 임신 중 산화 스트레스 증가에 대응하고 태반 기능을 보호하는 데 도움이 됩니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">식물성 기름(해바라기유·올리브유)</span><span class="food-tag">아몬드·견과류</span><span class="food-tag">해바라기씨</span><span class="food-tag">아보카도</span><span class="food-tag">시금치·브로콜리</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 K (Phylloquinone)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">혈액 응고 인자(프로트롬빈 등) 활성화에 필수적입니다. 골대사에 관여하여 뼈 무기질화를 돕습니다. 신생아는 비타민 K가 부족하여 출혈 위험이 있으므로, 출생 직후 비타민 K 주사를 맞습니다. 항응고제(와파린) 복용 시 섭취량 주의가 필요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">시금치·케일</span><span class="food-tag">브로콜리</span><span class="food-tag">낫토(청국장)</span><span class="food-tag">양배추</span><span class="food-tag">콩기름</span><span class="food-tag">파슬리</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="info-section-title">💧 수용성 비타민</div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 C (Ascorbic acid)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">강력한 항산화 작용, 콜라겐 합성(상처 치유·혈관·피부 건강), 면역 기능 강화에 기여합니다. 비헴철(식물성 철)의 흡수율을 2~3배 높여줍니다. 임신 중 늘어난 산화 스트레스에 대응하며 조기 양막 파수 예방과 관련이 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">빨간·노란 피망</span><span class="food-tag">키위</span><span class="food-tag">딸기</span><span class="food-tag">브로콜리</span><span class="food-tag">감귤·오렌지</span><span class="food-tag">파프리카</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">티아민 — 비타민 B1</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">탄수화물 대사의 핵심 조효소(TPP)로, 에너지 생성에 필수적입니다. 신경·근육 기능 유지에 중요하며, 결핍 시 각기병(beriberi)이 발생합니다. 임신 중 에너지 대사 증가로 요구량이 높아집니다. 심한 임신 오심·구토(입덧) 시 결핍 위험이 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">돼지고기</span><span class="food-tag">통곡류(현미·귀리)</span><span class="food-tag">콩류</span><span class="food-tag">해바라기씨</span><span class="food-tag">연어</span><span class="food-tag">강화 시리얼</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">리보플라빈 — 비타민 B2</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">FAD·FMN의 구성 성분으로 에너지 대사, 지방산 산화, 단백질 대사에 관여합니다. 성장 촉진, 피부·점막·눈 건강 유지에 기여합니다. 결핍 시 구내염, 구순염, 설염이 나타납니다. 빛에 의해 쉽게 파괴되므로 식품 보관 시 차광이 중요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">우유·유제품</span><span class="food-tag">달걀</span><span class="food-tag">육류(간 포함)</span><span class="food-tag">아몬드</span><span class="food-tag">버섯류</span><span class="food-tag">녹색 채소</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">니아신 — 비타민 B3</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">NAD·NADP의 구성 성분으로 에너지 대사, DNA 합성·수복, 세포 분화에 관여합니다. 피부·신경계·소화기 건강 유지에 필수적입니다. 결핍 시 펠라그라(피부염·설사·치매 3D)가 발생합니다. 트립토판(단백질)으로부터도 일부 합성됩니다(60mg 트립토판 → 1mgNE).</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">닭가슴살</span><span class="food-tag">참치·연어</span><span class="food-tag">쇠고기</span><span class="food-tag">땅콩·견과류</span><span class="food-tag">통곡류</span><span class="food-tag">버섯류</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 B6 (Pyridoxine)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">아미노산 대사 조효소(PLP)로, 단백질 합성과 분해에 광범위하게 관여합니다. 신경전달물질(세로토닌·도파민·GABA) 합성에 필수적입니다. 임신 오심·구토(입덧) 완화에 효과적이며, 태아 뇌신경 발달에 중요합니다. 면역 기능과 헴 합성에도 관여합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">닭고기·돼지고기</span><span class="food-tag">생선(연어·참치)</span><span class="food-tag">감자·고구마</span><span class="food-tag">바나나</span><span class="food-tag">통곡류</span><span class="food-tag">피스타치오</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">엽산 — 비타민 B9 ⭐</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">DNA·RNA 합성과 세포 분열에 필수적입니다. 임신 초기 신경관결손(이분척추·무뇌아) 예방의 핵심 영양소로, 임신 전부터 복용이 권장됩니다. 적혈구 형성, 호모시스테인 대사에도 관여합니다. 합성 엽산(보충제)은 천연 엽산보다 흡수율이 높아(약 1.7배) 보충제 400µg/일 추가 권장됩니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">시금치·상추</span><span class="food-tag">아스파라거스</span><span class="food-tag">브로콜리</span><span class="food-tag">렌틸콩·대두</span><span class="food-tag">간(소·닭)</span><span class="food-tag">오렌지·딸기</span><span class="food-tag">강화 곡류</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비타민 B12 (Cobalamin)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">적혈구 형성(엽산과 협력), 신경 수초(미엘린) 유지, DNA 합성에 필수적입니다. 엽산과 함께 호모시스테인을 메티오닌으로 전환하는 데 필요합니다. 결핍 시 거적아구성 빈혈, 신경 손상이 발생합니다. 채식·비건 임산부는 결핍 위험이 높아 보충제가 반드시 필요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">육류(쇠고기·돼지고기)</span><span class="food-tag">어패류(굴·조개·연어)</span><span class="food-tag">달걀</span><span class="food-tag">우유·치즈</span><span class="food-tag">강화 두유(비건용)</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">판토텐산 (Pantothenic acid)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">코엔자임A(CoA)의 구성 성분으로, 탄수화물·지방·단백질의 에너지 대사에 광범위하게 관여합니다. 지방산 합성·분해, 스테로이드 호르몬·신경전달물질 합성에 필요합니다. 다양한 식품에 널리 분포하여 결핍은 드물지만, 임신 중 태아 성장을 위해 요구량이 증가합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">육류(간·닭고기)</span><span class="food-tag">달걀</span><span class="food-tag">전곡류(현미)</span><span class="food-tag">콩류</span><span class="food-tag">아보카도</span><span class="food-tag">버섯류</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">비오틴 (Biotin)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">탄수화물·지방·단백질 대사의 카르복실화 반응 조효소입니다. 포도당 신생합성, 지방산 합성에 필수적이며 피부·모발·손발톱 건강에 중요합니다. 임신 중 생화학적 비오틴 결핍이 흔히 나타나며, 태아 기형과 관련될 수 있습니다. 날달걀흰자의 아비딘은 비오틴 흡수를 방해합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">달걀노른자(익힌 것)</span><span class="food-tag">간(소·돼지)</span><span class="food-tag">연어</span><span class="food-tag">아몬드·땅콩</span><span class="food-tag">콩류</span><span class="food-tag">고구마</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">콜린 (Choline)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">세포막(포스파티딜콜린) 구성 성분으로, 태아 뇌신경 발달과 기억력 형성에 매우 중요합니다. 신경전달물질 아세틸콜린의 전구체이며, 간의 지방 대사(지방간 예방)와 엽산과 협력하는 메틸화 반응에 관여합니다. 임신 중 충분한 콜린 섭취는 태아 인지 기능과 연관됩니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">달걀노른자</span><span class="food-tag">소간·닭간</span><span class="food-tag">쇠고기</span><span class="food-tag">대두·두부</span><span class="food-tag">연어</span><span class="food-tag">브로콜리</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="info-section-title">🦴 다량 무기질</div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">칼슘 (Calcium)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">뼈와 치아 형성(체내 칼슘의 99%)에 핵심적입니다. 근육 수축(심장 포함), 신경 전달, 혈액 응고, 혈압 조절에도 필수적입니다. 임신 중 태아의 뼈 형성을 위해 하루 약 200~300mg의 칼슘이 태아로 이동합니다. 충분한 섭취가 임신성 고혈압 예방과 관련됩니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">우유·요구르트·치즈</span><span class="food-tag">두부(칼슘 응고)</span><span class="food-tag">뼈째 먹는 생선(멸치·뱅어포)</span><span class="food-tag">브로콜리</span><span class="food-tag">케일·시금치</span><span class="food-tag">아몬드</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">인 (Phosphorus)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">칼슘과 함께 뼈·치아의 주요 구성 성분(하이드록시아파타이트)입니다. 에너지 저장·전달(ATP), 세포막 구성(인지질), DNA·RNA 합성에 필수적입니다. 식품 첨가물(가공식품)에 많이 들어 있어 현대 식단에서 결핍은 드뭅니다. 칼슘:인 비율(1:1 이상)이 중요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">육류·어류</span><span class="food-tag">유제품</span><span class="food-tag">달걀</span><span class="food-tag">콩류·두류</span><span class="food-tag">견과류</span><span class="food-tag">통곡류</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">칼륨 (Potassium)</span>
+        <span class="ah-tag">충분섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">세포 내 주요 양이온으로, 수분·전해질 균형과 삼투압 조절에 필수적입니다. 혈압 조절(나트륨 배설 촉진), 신경·근육 전기 신호 전달, 심장 박동 유지에 중요합니다. 임신성 고혈압 예방을 위해 충분한 칼륨 섭취가 권장됩니다. 과도한 나트륨 섭취를 상쇄하는 역할을 합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">바나나</span><span class="food-tag">감자·고구마</span><span class="food-tag">아보카도</span><span class="food-tag">시금치·토마토</span><span class="food-tag">콩류·팥</span><span class="food-tag">오렌지</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">마그네슘 (Magnesium)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">체내 300여 가지 효소 반응의 조효소로, 에너지 대사(ATP 활성화), DNA·단백질 합성에 필수적입니다. 근육 이완, 신경 기능 조절, 혈당 조절, 혈압 조절에 관여합니다. 뼈 형성(칼슘과 협력)에도 중요하며, 임신 중 자궁 수축 조절과 조기 진통 예방에 관련이 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">아몬드·캐슈넛·땅콩</span><span class="food-tag">통곡류(현미·귀리)</span><span class="food-tag">시금치·케일</span><span class="food-tag">검은콩·대두</span><span class="food-tag">다크초콜릿</span><span class="food-tag">두부</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="info-section-title">🔬 미량 무기질</div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">철 (Iron) ⭐</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">헤모글로빈·미오글로빈의 구성 성분으로, 산소 운반에 핵심적입니다. 에너지 대사, 면역 기능, 신경전달물질 합성에도 관여합니다. 임신 중 혈액량이 약 50% 증가하고 태반·태아에 철 공급이 필요하여 요구량이 크게 증가합니다. 결핍 시 철 결핍성 빈혈로 피로, 창백, 태아 저체중 위험이 높아집니다. 헴철(동물성)의 흡수율은 약 25%, 비헴철(식물성)은 5% 정도로 낮습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">소·돼지 간</span><span class="food-tag">붉은 육류</span><span class="food-tag">굴·바지락</span><span class="food-tag">시금치(비타민C와 함께)</span><span class="food-tag">콩류·두부</span><span class="food-tag">강화 시리얼</span><span class="food-tag">검은깨</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">아연 (Zinc)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">세포 분열과 성장, 면역 기능, 상처 치유, 미각·후각 기능에 필수적입니다. 300여 효소의 구성 성분 또는 조효소로, DNA 합성과 단백질 대사에 광범위하게 관여합니다. 태아의 정상 성장과 발달, 신경계 발달에 중요합니다. 결핍 시 조산, 저체중출생아, 면역 저하의 위험이 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">굴(아연 최고 급원)</span><span class="food-tag">쇠고기·돼지고기</span><span class="food-tag">게·새우</span><span class="food-tag">호박씨·캐슈넛</span><span class="food-tag">통곡류</span><span class="food-tag">달걀</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">구리 (Copper)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">철 대사(페로옥시다아제)와 운반에 필요합니다. 결합조직(콜라겐·엘라스틴) 형성, 항산화 효소(슈퍼옥사이드 디스뮤타아제) 구성, 에너지 생성(시토크롬 c 옥시다아제)에 관여합니다. 태아 혈관·신경 발달에 중요합니다. 아연·철의 과잉 섭취는 구리 흡수를 방해할 수 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">굴·게·새우</span><span class="food-tag">소간</span><span class="food-tag">캐슈넛·아몬드</span><span class="food-tag">해바라기씨·참깨</span><span class="food-tag">통곡류</span><span class="food-tag">다크초콜릿</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">요오드 (Iodine) ⭐</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">갑상선 호르몬(T3·T4) 합성에 필수적으로, 기초대사율 조절, 성장·발달, 체온 유지에 관여합니다. 태아의 뇌와 신경계 발달에 매우 중요하며, 임신 중 결핍 시 지적 장애(크레틴병), 갑상선 기능 저하, 유산의 위험이 있습니다. 단, 과잉 섭취(해조류 과다)도 갑상선 기능에 영향을 줄 수 있으니 주의가 필요합니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">다시마(적당량)</span><span class="food-tag">미역·김</span><span class="food-tag">어패류</span><span class="food-tag">요오드 강화 소금</span><span class="food-tag">유제품(우유)</span><span class="food-tag">달걀</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        <span class="ah-name">셀레늄 (Selenium)</span>
+        <span class="ah-tag">권장섭취량</span>
+        <span class="ah-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="ab-row"><span class="ab-icon">✨</span><div class="ab-content"><div class="ab-label">주요 효과</div><div class="ab-text">항산화 효소(글루타티온 퍼옥시다아제)의 구성 성분으로, 산화적 손상으로부터 세포를 보호합니다. 갑상선 호르몬 대사(T4→T3 전환), 면역 기능 강화, 항염증 작용에 관여합니다. 임신 중 태반의 산화 스트레스 방어에 기여하며, 결핍 시 유산·사산과 관련될 수 있습니다. 과잉 섭취 시 셀레늄 중독(탈모·손발톱 변형) 위험이 있습니다.</div></div></div>
+        <div class="ab-row"><span class="ab-icon">🍽️</span><div class="ab-content"><div class="ab-label">주요 급원식품</div><div class="ab-foods"><span class="food-tag">브라질너트(1~2개/일)</span><span class="food-tag">참치·연어·새우</span><span class="food-tag">쇠고기·돼지고기</span><span class="food-tag">달걀</span><span class="food-tag">통곡류</span><span class="food-tag">닭고기</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 제작자 정보 ── -->
+  <div class="credits-card">
+    <div class="credits-univ">🎓 유한대학교 식품영양학과</div>
+    <div class="credits-dept">Yuhan University · Department of Food and Nutrition</div>
+    <div class="credits-members">
+      <span class="member-chip">최동혁</span>
+      <span class="member-chip">윤체원</span>
+      <span class="member-chip">신보성</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  2025 KDRI DATA
+// ══════════════════════════════════════
+
+// 성인 여성 연령군별 기준값 (에너지 제외 — EER은 공식으로 계산)
+function getAgeGroup(age) {
+  if (age <= 29) return '19-29';
+  if (age <= 49) return '30-49';
+  return '50-64';
+}
+
+const BASE = {
+  "19-29": {
+    protein_coef: 0.91, protein_rni_add: 10, // EAR=0.91g/kg → RNI = EAR*1.2(반올림)
+    carb_ear: 100, carb_rni: 130, fiber: 20,
+    linoleic: 8, ala: 0.8, epa_dha: 250,
+    vitA: 490, vitD: 10, vitE: 10, vitK: 65,
+    vitC: 75, thiamin: 1.0, riboflavin: 1.0, niacin: 12,
+    vitB6: 1.3, folate: 320, vitB12: 2.4, pantothenic: 5, biotin: 30, choline: 390,
+    calcium: 700, phosphorus: 580, potassium: 2600, magnesium: 255,
+    iron: 11, zinc: 8, copper: 0.7, iodine: 150, selenium: 55,
+    water: 2100
+  },
+  "30-49": {
+    protein_coef: 0.91, protein_rni_add: 10,
+    carb_ear: 100, carb_rni: 130, fiber: 20,
+    linoleic: 7, ala: 0.9, epa_dha: 250,
+    vitA: 490, vitD: 10, vitE: 10, vitK: 65,
+    vitC: 75, thiamin: 1.0, riboflavin: 1.0, niacin: 12,
+    vitB6: 1.3, folate: 320, vitB12: 2.4, pantothenic: 5, biotin: 30, choline: 390,
+    calcium: 700, phosphorus: 580, potassium: 2600, magnesium: 255,
+    iron: 11, zinc: 8, copper: 0.7, iodine: 150, selenium: 55,
+    water: 2000
+  },
+  "50-64": {
+    protein_coef: 0.91, protein_rni_add: 10,
+    carb_ear: 100, carb_rni: 130, fiber: 20,
+    linoleic: 6, ala: 0.9, epa_dha: 250,
+    vitA: 490, vitD: 10, vitE: 10, vitK: 65,
+    vitC: 75, thiamin: 0.9, riboflavin: 0.9, niacin: 11,
+    vitB6: 1.3, folate: 320, vitB12: 2.4, pantothenic: 5, biotin: 30, choline: 390,
+    calcium: 700, phosphorus: 580, potassium: 2600, magnesium: 255,
+    iron: 7, zinc: 7, copper: 0.7, iodine: 150, selenium: 55,
+    water: 1900
+  }
+};
+
+// PA 계수 (IOM 여성용)
+const PA_COEF = {
+  sedentary: 1.0,
+  low: 1.12,
+  active: 1.27,
+  very: 1.45
+};
+
+// EER 공식 (IOM, 성인 여성 19세 이상)
+// EER = 354 − 6.91 × age + PA × (9.36 × weight + 726 × height_m)
+function calcEER(age, weightKg, heightCm, paLevel) {
+  const pa = PA_COEF[paLevel];
+  const hm = heightCm / 100;
+  const eer = 354 - 6.91 * age + pa * (9.36 * weightKg + 726 * hm);
+  return Math.floor(eer / 50) * 50; // 50단위 절삭 (KDRI 방식: 100단위지만 개인 계산에선 50단위)
+}
+
+// 부가량 데이터
+const ADD = {
+  t1: { energy:0, protein_rni:0, carb_rni:35, fiber:5, vitA:0, vitD:0, vitE:0, vitK:0,
+    vitC:10, thiamin:0.4, riboflavin:0.4, niacin:4, vitB6:0.6, folate:200, vitB12:0.4,
+    pantothenic:1, biotin:0, choline:30, calcium:0, phosphorus:0, potassium:0, magnesium:0,
+    iron:10, zinc:2.5, copper:0.1, iodine:70, selenium:5, epa_dha_total:300, water:200 },
+  t2: { energy:340, protein_rni:15, carb_rni:45, fiber:5, vitA:0, vitD:0, vitE:0, vitK:0,
+    vitC:10, thiamin:0.4, riboflavin:0.4, niacin:4, vitB6:0.6, folate:200, vitB12:0.4,
+    pantothenic:1, biotin:0, choline:30, calcium:0, phosphorus:0, potassium:0, magnesium:0,
+    iron:10, zinc:2.5, copper:0.1, iodine:70, selenium:5, epa_dha_total:300, water:200 },
+  t3: { energy:450, protein_rni:30, carb_rni:45, fiber:5, vitA:0, vitD:0, vitE:0, vitK:0,
+    vitC:10, thiamin:0.4, riboflavin:0.4, niacin:4, vitB6:0.6, folate:200, vitB12:0.4,
+    pantothenic:1, biotin:0, choline:30, calcium:0, phosphorus:0, potassium:0, magnesium:0,
+    iron:10, zinc:2.5, copper:0.1, iodine:70, selenium:5, epa_dha_total:300, water:200 },
+  lact: { energy:340, protein_rni:25, carb_rni:70, fiber:5, vitA:490, vitD:0, vitE:3, vitK:0,
+    vitC:45, thiamin:0.4, riboflavin:0.3, niacin:3, vitB6:0.6, folate:130, vitB12:0.4,
+    pantothenic:2, biotin:5, choline:60, calcium:0, phosphorus:0, potassium:400, magnesium:0,
+    iron:0, zinc:5, copper:0.5, iodine:130, selenium:15, epa_dha_total:300, water:700 }
+};
+
+// ── UI ──
+let currentPeriod = 't2';
+
+function selectPeriod(btn) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPeriod = btn.dataset.period;
+}
+
+document.getElementById('status').addEventListener('change', function() {
+  const isPreg = this.value === 'preg';
+  document.querySelectorAll('.period-btn[data-period^="t"]').forEach(b => b.style.display = isPreg ? '' : 'none');
+  const lb = document.querySelector('.period-btn[data-period="lact"]');
+  lb.style.display = isPreg ? 'none' : '';
+  if (isPreg) {
+    currentPeriod = 't2';
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('[data-period="t2"]').classList.add('active');
+  } else {
+    currentPeriod = 'lact';
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    lb.classList.add('active');
+  }
+});
+
+// BMI 자동 계산
+function updateBMI() {
+  const h = parseFloat(document.getElementById('height').value) || 0;
+  const w = parseFloat(document.getElementById('weight').value) || 0;
+  const cw = parseFloat(document.getElementById('currentWeight').value) || 0;
+  const bar = document.getElementById('bmiBar');
+  const gainBar = document.getElementById('weightGainBar');
+  if (h > 0 && w > 0) {
+    const bmi = w / ((h/100) ** 2);
+    document.getElementById('bmiVal').textContent = bmi.toFixed(1);
+    let cls, label, gainRange;
+    if (bmi < 18.5) { cls = 'bmi-under'; label = '저체중'; gainRange = '12.5~18.0'; }
+    else if (bmi < 23) { cls = 'bmi-normal'; label = '정상'; gainRange = '11.5~16.0'; }
+    else if (bmi < 25) { cls = 'bmi-over'; label = '과체중'; gainRange = '7.0~11.5'; }
+    else { cls = 'bmi-obese'; label = '비만'; gainRange = '5.0~9.0'; }
+    const st = document.getElementById('bmiStatus');
+    st.textContent = label;
+    st.className = 'bmi-status ' + cls;
+    document.getElementById('bmiGroup').textContent = '임신 중 권장 체중증가: ' + gainRange + 'kg';
+    bar.classList.add('show');
+    // 현재 체중 증가량 표시
+    if (cw > 0 && cw >= w) {
+      const diff = (cw - w).toFixed(1);
+      const [lo, hi] = gainRange.split('~').map(parseFloat);
+      const diffNum = parseFloat(diff);
+      let statusText = '';
+      if (diffNum < lo) statusText = '(권장 범위 미달)';
+      else if (diffNum > hi) statusText = '(권장 범위 초과)';
+      else statusText = '(권장 범위 내)';
+      document.getElementById('weightGainVal').textContent = '+' + diff + 'kg';
+      document.getElementById('weightGainStatus').textContent = statusText;
+      gainBar.classList.add('show');
+    } else {
+      gainBar.classList.remove('show');
+    }
+  } else {
+    bar.classList.remove('show');
+    gainBar.classList.remove('show');
+  }
+}
+document.getElementById('height').addEventListener('input', updateBMI);
+document.getElementById('weight').addEventListener('input', updateBMI);
+document.getElementById('currentWeight').addEventListener('input', updateBMI);
+updateBMI();
+
+// ── CALCULATE ──
+function calculate() {
+  const age = parseInt(document.getElementById('age').value) || 30;
+  const height = parseFloat(document.getElementById('height').value) || 161;
+  const weight = parseFloat(document.getElementById('weight').value) || 56;
+  const currentWeightInput = parseFloat(document.getElementById('currentWeight').value) || 0;
+  const weightForEER = currentWeightInput > 0 ? currentWeightInput : weight;
+  const pa = document.getElementById('pa').value;
+  const status = document.getElementById('status').value;
+  const ageGrp = getAgeGroup(age);
+  const base = BASE[ageGrp];
+  const add = ADD[currentPeriod];
+  const bmi = weight / ((height/100)**2);
+
+  // 1) EER 계산 (현재 체중 입력 시 현재 체중 기준)
+  const baseEER = calcEER(age, weightForEER, height, pa);
+  const totalEER = baseEER + add.energy;
+
+  // 2) 단백질: EAR = 0.91 g/kg → RNI = EAR × 1.2 (현재 체중 기준)
+  const proteinEAR = Math.round(base.protein_coef * weightForEER);
+  const proteinRNI = Math.round(proteinEAR * 1.2);
+  const proteinTotal = proteinRNI + add.protein_rni;
+
+  // 3) 탄수화물
+  const carbTotal = base.carb_rni + add.carb_rni;
+
+  // 4) 엽산
+  const folateTotal = base.folate + add.folate;
+
+  const periodLabels = {
+    t1:'임신 1기 (1~12주)', t2:'임신 2기 (13~27주)',
+    t3:'임신 3기 (28주~출산)', lact:'수유기'
+  };
+  const paLabels = {
+    sedentary:'비활동적', low:'저활동적', active:'활동적', very:'매우 활동적'
+  };
+
+  let html = '';
+
+  // ── Header ──
+  const weightGainInfo = currentWeightInput > 0 && currentWeightInput >= weight
+    ? ` / 현재 ${currentWeightInput}kg (+${(currentWeightInput - weight).toFixed(1)}kg)`
+    : '';
+  const eerWeightNote = currentWeightInput > 0 ? ` (현재체중 ${currentWeightInput}kg 기준)` : '';
+  html += `<div class="result-header">
+    <div class="rh-top">
+      <div class="profile-icon">${status==='preg'?'🤰':'🤱'}</div>
+      <div class="rh-info">
+        <div class="name">${age}세 · ${periodLabels[currentPeriod]}</div>
+        <div class="detail">${height}cm / 임신전 ${weight}kg${weightGainInfo} · ${paLabels[pa]} · BMI ${bmi.toFixed(1)}</div>
+      </div>
+    </div>
+    <div class="rh-stats">
+      <div class="rh-stat"><div class="sv" style="color:var(--accent-deep)">${totalEER.toLocaleString()}</div><div class="sl">에너지 kcal</div></div>
+      <div class="rh-stat"><div class="sv" style="color:var(--green)">${proteinTotal}g</div><div class="sl">단백질</div></div>
+      <div class="rh-stat"><div class="sv" style="color:var(--purple)">${folateTotal}</div><div class="sl">엽산 µgDFE</div></div>
+      <div class="rh-stat"><div class="sv" style="color:var(--blue)">${(base.iron + add.iron)}mg</div><div class="sl">철</div></div>
+    </div>
+  </div>`;
+
+  // ── EER Formula ──
+  const paVal = PA_COEF[pa];
+  html += `<div class="formula-box">
+    <div class="fb-title">📐 에너지필요추정량 (EER) 산출 과정</div>
+    <code>EER = 354 − 6.91 × <b>${age}</b> + ${paVal} × (9.36 × <b>${weightForEER}</b> + 726 × <b>${(height/100).toFixed(2)}</b>)</code>
+    <code style="margin-top:4px">= <b>${baseEER} kcal</b> (기초) + <b>${add.energy} kcal</b> (부가) = <b>${totalEER} kcal/일</b></code>
+    <div class="fb-note">IOM 공식 적용, PA계수 ${paVal} (${paLabels[pa]}), KDRI 방식 50kcal 단위 절삭${eerWeightNote}</div>
+  </div>`;
+
+  // ── Key cards ──
+  html += `<div class="key-nutrients">
+    <div class="key-card energy">
+      <div class="kc-label">에너지</div>
+      <div class="kc-value">${totalEER.toLocaleString()}</div>
+      <div class="kc-unit">kcal/일</div>
+    </div>
+    <div class="key-card protein">
+      <div class="kc-label">단백질 (${weightForEER}kg 기준)</div>
+      <div class="kc-value">${proteinTotal}</div>
+      <div class="kc-unit">g/일 (EAR ${proteinEAR}g × 1.2 + ${add.protein_rni}g)</div>
+    </div>
+    <div class="key-card folate">
+      <div class="kc-label">엽산</div>
+      <div class="kc-value">${folateTotal}</div>
+      <div class="kc-unit">µgDFE/일</div>
+    </div>
+  </div>`;
+
+  // ── Alerts ──
+  if (bmi >= 25) {
+    html += `<div class="alert-card alert-warn">
+      <div class="alert-icon">⚖️</div>
+      <div class="alert-text">BMI ${bmi.toFixed(1)}로 과체중/비만 범위. 임신 중 권장 체중증가량은 ${bmi<30?'7.0~11.5':'5.0~9.0'}kg으로, 에너지 섭취량 조절과 전문가 상담이 필요합니다.</div>
+    </div>`;
+  } else if (bmi < 18.5) {
+    html += `<div class="alert-card alert-warn">
+      <div class="alert-icon">⚖️</div>
+      <div class="alert-text">BMI ${bmi.toFixed(1)}로 저체중 범위. 임신 중 권장 체중증가량은 12.5~18.0kg으로, 충분한 영양 섭취가 중요합니다.</div>
+    </div>`;
+  }
+
+  if (status === 'preg') {
+    html += `<div class="alert-card alert-danger">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-text"><strong>엽산</strong>: 임신 전~초기 신경관결손 예방을 위해 합성 엽산 보충제 400µg/일 이상 별도 섭취 권장</div>
+    </div>`;
+    html += `<div class="alert-card alert-info">
+      <div class="alert-icon">💊</div>
+      <div class="alert-text"><strong>철 +10mg</strong>: 식사만으로 충족 어려움. 의사 상담 하에 철분 보충제 병행이 일반적</div>
+    </div>`;
+  } else {
+    html += `<div class="alert-card alert-info">
+      <div class="alert-icon">🍼</div>
+      <div class="alert-text">수유부는 <strong>비타민 A (+490µgRAE)</strong>와 <strong>수분 (+700mL)</strong> 부가량이 높음. 충분한 섭취 필요</div>
+    </div>`;
+  }
+
+  // ── Nutrient Table ──
+  const sections = [
+    { cat: '에너지 · 다량영양소', items: [
+      { name:'에너지', base:baseEER, add:add.energy, unit:'kcal', type:'필요추정량', hl:1 },
+      { name:'단백질', base:proteinRNI, add:add.protein_rni, unit:'g', type:`권장 (${weightForEER}kg×0.91×1.2)`, hl:1 },
+      { name:'탄수화물', base:base.carb_rni, add:add.carb_rni, unit:'g', type:'권장섭취량' },
+      { name:'식이섬유', base:base.fiber, add:add.fiber, unit:'g', type:'충분섭취량' },
+      { name:'EPA+DHA', base:base.epa_dha, add:null, total:add.epa_dha_total, unit:'mg', type:'총량', note:'부가량 아닌 총량' },
+      { name:'수분(총수분)', base:base.water, add:add.water, unit:'mL', type:'충분섭취량' },
+    ]},
+    { cat: '지용성 비타민', items: [
+      { name:'비타민 A', base:base.vitA, add:add.vitA, unit:'µgRAE', type:'권장' },
+      { name:'비타민 D', base:base.vitD, add:add.vitD, unit:'µg', type:'충분' },
+      { name:'비타민 E', base:base.vitE, add:add.vitE, unit:'mg α-TE', type:'충분' },
+      { name:'비타민 K', base:base.vitK, add:add.vitK, unit:'µg', type:'충분' },
+    ]},
+    { cat: '수용성 비타민', items: [
+      { name:'비타민 C', base:base.vitC, add:add.vitC, unit:'mg', type:'권장' },
+      { name:'티아민 (B1)', base:base.thiamin, add:add.thiamin, unit:'mg', type:'권장' },
+      { name:'리보플라빈 (B2)', base:base.riboflavin, add:add.riboflavin, unit:'mg', type:'권장' },
+      { name:'니아신 (B3)', base:base.niacin, add:add.niacin, unit:'mgNE', type:'권장' },
+      { name:'비타민 B6', base:base.vitB6, add:add.vitB6, unit:'mg', type:'권장' },
+      { name:'엽산 (B9)', base:base.folate, add:add.folate, unit:'µgDFE', type:'권장', hl:1 },
+      { name:'비타민 B12', base:base.vitB12, add:add.vitB12, unit:'µg', type:'권장' },
+      { name:'판토텐산', base:base.pantothenic, add:add.pantothenic, unit:'mg', type:'충분' },
+      { name:'비오틴', base:base.biotin, add:add.biotin, unit:'µg', type:'충분' },
+      { name:'콜린', base:base.choline, add:add.choline, unit:'mg', type:'충분' },
+    ]},
+    { cat: '다량 무기질', items: [
+      { name:'칼슘', base:base.calcium, add:add.calcium, unit:'mg', type:'권장' },
+      { name:'인', base:base.phosphorus, add:add.phosphorus, unit:'mg', type:'권장' },
+      { name:'칼륨', base:base.potassium, add:add.potassium, unit:'mg', type:'충분' },
+      { name:'마그네슘', base:base.magnesium, add:add.magnesium, unit:'mg', type:'권장' },
+    ]},
+    { cat: '미량 무기질', items: [
+      { name:'철', base:base.iron, add:add.iron, unit:'mg', type:'권장', hl:1 },
+      { name:'아연', base:base.zinc, add:add.zinc, unit:'mg', type:'권장' },
+      { name:'구리', base:base.copper, add:add.copper, unit:'mg', type:'권장' },
+      { name:'요오드', base:base.iodine, add:add.iodine, unit:'µg', type:'권장', hl:1 },
+      { name:'셀레늄', base:base.selenium, add:add.selenium, unit:'µg', type:'권장' },
+    ]},
+  ];
+
+  sections.forEach(s => {
+    html += `<div class="section-title">${s.cat}</div><div class="nutrient-grid">`;
+    s.items.forEach(n => {
+      const total = n.total != null ? n.total : n.base + (n.add || 0);
+      const addStr = n.add != null ? (n.add > 0 ? `+${n.add}` : '+0') : (n.note || '');
+      const hl = n.hl ? ' highlight' : '';
+      html += `<div class="nutrient-row${hl}">
+        <div class="n-name">${n.name}<br><span class="n-type">${n.type}</span></div>
+        <div class="n-base">${typeof n.base==='number' ? n.base.toLocaleString() : n.base}</div>
+        <div class="n-add">${addStr}</div>
+        <div class="n-total">${total.toLocaleString()} <span class="n-unit">${n.unit}</span></div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  // ── Deficiency ──
+  html += `<div class="section-title">⚡ 결핍 주의 영양소</div><div class="deficiency-list">`;
+  const defs = status === 'preg' ? [
+    { name:'엽산', risk:'high', reason:'신경관결손 예방 핵심. 가임기 여성 58%가 평균필요량 미만 섭취' },
+    { name:'철', risk:'high', reason:'혈액량 증가로 수요 급증. 임신 후기 철 결핍성 빈혈 빈발' },
+    { name:'비타민 D', risk:'high', reason:'한국인 평균 3.0µg/일. 충분섭취량(10µg) 도달률 31%' },
+    { name:'칼슘', risk:'mid', reason:'부가량 +0이나 기본 700mg도 미달 빈번. 유제품 강화 필요' },
+    { name:'요오드', risk:'mid', reason:'태아 갑상선 발달 필수. 해조류 과잉섭취도 주의' },
+    { name:'DHA', risk:'mid', reason:'태아 뇌·망막 발달에 중요. 생선 부족 시 보충 고려' },
+  ] : [
+    { name:'비타민 A', risk:'high', reason:'수유부 부가량 +490µgRAE로 가장 큼' },
+    { name:'비타민 D', risk:'high', reason:'모유 내 비타민 D 함량 낮아 영아 보충 별도 권장' },
+    { name:'칼슘', risk:'mid', reason:'부가량 +0이나 모유 분비로 칼슘 소모 증가' },
+    { name:'수분', risk:'mid', reason:'모유 생성에 수분 필요량 증가. +700mL 추가' },
+  ];
+  defs.forEach(d => {
+    html += `<div class="def-item"><div class="def-dot ${d.risk}"></div>
+      <div class="def-content"><div class="def-name">${d.name}</div><div class="def-reason">${d.reason}</div></div></div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="alert-card alert-warn" style="margin-top:14px">
+    <div class="alert-icon">📌</div>
+    <div class="alert-text"><strong>상한섭취량</strong>은 부가량이 아닌 총량으로 적용. 보충제 섭취 시 반드시 확인하세요. 개인 건강 상태에 따라 전문가 상담 권장.</div>
+  </div>`;
+
+  const el = document.getElementById('results');
+  el.innerHTML = html;
+  el.className = 'show';
+  el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+window.addEventListener('DOMContentLoaded', () => setTimeout(calculate, 300));
+
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+</script>
+
+<div class="footer-note">
+  본 계산기는 2025 한국인 영양소 섭취기준(KDRI) 요약본 기반 제작.<br>
+  에너지필요추정량은 IOM 공식(KDRI 채택) 적용. 단백질 EAR = 0.91g/kg 체중 기반.<br>
+  영양소 효과 및 급원식품 정보: 한국영양학회 2025 KDRI 참고.<br>
+  개인 건강 상태에 따라 달라질 수 있으며, 정확한 영양 상담은 전문가에게 문의하세요.<br>
+  출처: 보건복지부 · 한국영양학회 (2025)<br><br>
+  <strong style="color:var(--accent-deep)">제작: 유한대학교 식품영양학과 · 최동혁, 윤체원, 신보성</strong>
+</div>
+</body>
+</html>
