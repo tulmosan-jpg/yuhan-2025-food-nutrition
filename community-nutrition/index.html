@@ -382,7 +382,7 @@ const G={
   ['자기조절',(p,a)=>`${J(p,'은는')} 매일 ${a.act} 여부를 스스로 기록하고, 못 한 날은 다음 날 보충하려고 조절한다.`,['자기조절','조절']]]},
  ttm:{n:'변화단계',items:[
   ['고려전단계',(p,h)=>`${J(p,'은는')} 자신의 ${h.habit}에 아무 문제가 없다고 생각한다.`,['고려전']],
-  ['고려단계',(p,h)=>`${J(p,'은는')} ${J(h.goal,'이가')} 필요하다는 건 알지만, 아직 시작할 마음의 준비는 안 됐다.`,['고려']],
+  ['고려단계',(p,h)=>`${J(p,'은는')} ${J(h.goal,'이가')} 필요하다는 건 알지만, 아직 시작할 마음의 준비는 안 됐다.`,['고려단계']],
   ['준비단계',(p,h)=>`${J(p,'은는')} 다음 달부터 ${J(h.goal,'을를')} 하려고 ${h.prep}`,['준비']],
   ['실행단계',(p,h)=>`${J(p,'은는')} ${RI(2,12)}주째 ${J(h.goal,'을를')} 실천하고 있다.`,['실행']],
   ['유지단계',(p,h)=>`${J(p,'은는')} ${RI(7,18)}개월째 ${J(h.goal,'을를')} 꾸준히 이어오며 이제는 습관이 되었다.`,['유지']],
@@ -568,6 +568,50 @@ function renderTheory(list){
   ws.forEach(w=>{const s=document.createElement('section');s.className='theory';s.innerHTML=`<h2 class="topic">${w}주차<small>${W[w]}</small></h2>${THEORY[w]}`;list.appendChild(s)});
 }
 
+// ===== 강의안 수록 문제 (원문 그대로) =====
+const LEC=[];
+(()=>{
+ const blank=(w,grp,list,choices)=>list.forEach(([q,ans,keys])=>LEC.push({k:'s',w,grp,q,c:'',keys:[keys],a:ans,choices}));
+ const g1='2주차 강의안 p.10 · 짧은 사례에서 개념 찾기 — HBM';
+ blank(2,g1,[
+  ['A씨는 가족 중 당뇨병 환자가 있어 "나도 당뇨에 걸릴 수 있겠다"고 생각한다. (　　　　　　)','인지된 민감성',['민감']],
+  ['B씨는 "고혈압은 잘 낫지 않고 합병증으로 실명까지 이를 수 있다"며 걱정한다. (　　　　　　)','인지된 심각성',['심각']],
+  ['C씨는 "저염식을 하면 혈압이 확실히 낮아진다더라"는 말을 듣고 기대하고 있다. (　　　　　　)','인지된 이익',['이익']],
+  ['D씨는 "저염식은 맛이 없고 요리하기 번거롭다"며 시도를 꺼린다. (　　　　　　)','인지된 장애',['장애']]]);
+ const g2='2주차 강의안 p.18 · 짧은 사례에서 개념 찾기 — TPB';
+ blank(2,g2,[
+  ['E씨는 "저염식은 건강에 좋으니 해볼 만하다"고 생각한다. (　　　　　　)','행동에 대한 태도',['태도']],
+  ['F씨는 "자녀들이 내가 저염식을 하길 바란다"는 걸 알고 신경이 쓰인다. (　　　　　　)','주관적 규범',['규범']],
+  ['G씨는 "나는 요리를 잘 못해서 저염식 실천이 어려울 것 같다"고 느낀다. (　　　　　　)','인지된 행동통제력',['통제']],
+  ['H씨는 "다음 주부터 꼭 저염식을 시작해야겠다"고 다짐했다. (　　　　　　)','행동의도',['의도']]]);
+ const g3='2주차 강의안 p.27 · 생각해보기 — 오늘 배운 이론을 나의 언어로 설명해보면';
+ [['1.  내가 최근에 바꾸려고 했던(혹은 바꾸지 못한) 건강습관은 무엇인가?','정답 없음 — 자신의 경험을 적는다. 예: 야식 끊기, 아침 챙겨 먹기'],
+  ['2.  그 습관에 대해 HBM의 민감성·심각성·이익·장애를 각각 적용해보면?','민감성(나도 걸릴 수 있다), 심각성(걸리면 심각하다), 이익(바꾸면 좋은 점), 장애(바꾸기 어려운 점)를 내 습관에 하나씩 대입한다.'],
+  ['3.  그 습관에 대해 TPB의 태도·주관적 규범·인지된 행동통제력을 각각 적용해보면?','태도(그 행동을 좋게 보는가), 주관적 규범(주변 사람이 기대하는가), 인지된 행동통제력(실천이 쉽다/어렵다고 느끼는가)을 대입한다.']
+ ].forEach(([q,a])=>LEC.push({k:'s',w:2,grp:g3,q,c:'',keys:null,a}));
+ const g4='3주차 강의안 p.10 · 짧은 사례에서 개념 찾기 — 사회인지이론';
+ blank(3,g4,[
+  ['A양은 "나는 채소 반찬도 골고루 잘 먹을 수 있다"고 스스로 생각한다. (　　　　　　)','자아효능감',['효능']],
+  ['B군은 짝꿍이 급식을 남기지 않고 다 먹는 모습을 보고 자신도 따라 해보았다. (　　　　　　)','관찰학습',['관찰']],
+  ['C양은 잔반을 남기지 않은 날, 담임선생님이 칭찬 스티커를 붙여주자 다음날도 다 먹으려고 노력했다. (　　　　　　)','긍정적 강화',['긍정']],
+  ['D군은 매일 저녁 스스로 물 섭취량을 기록하며 부족하면 더 마시려고 조절한다. (　　　　　　)','자기조절',['조절']]]);
+ const g5='3주차 강의안 p.18 · 짧은 사례에서 개념 찾기 — 변화단계모델';
+ blank(3,g5,[
+  ['E씨는 자신의 짠 식습관에 아무 문제가 없다고 생각하며 신경쓰지 않는다. (　　　　　　)','고려전단계',['고려전']],
+  ['F씨는 저염식이 필요하다는 것은 알지만 아직 시작할 마음의 준비는 안 됐다. (　　　　　　)','고려단계',['고려단계']],
+  ['G씨는 다음 주부터 저염식 교육 프로그램에 등록하기로 하고 장보기 목록을 바꿔보았다. (　　　　　　)','준비단계',['준비']],
+  ['H씨는 지난 8개월간 저염식을 꾸준히 실천하며 SNS 식단 기록 앱도 계속 사용하고 있다. (　　　　　　)','유지단계',['유지']]]);
+ const g6='3주차 강의안 p.27~28 · 국시형 문제 풀어보기';
+ LEC.push({k:'m',w:3,grp:g6,q:'문제 1. 다음 설명에 해당하는 이론은?',c:'"친구가 급식을 남기지 않고 다 먹는 모습을 보고, 나도 따라 해보기로 했다."',o:['건강신념모델','계획적 행동이론','사회인지이론','범이론적모형'],a:2,e:'정답 ③ — 타인의 행동을 관찰하고 모방하는 것은 사회인지이론의 \'관찰학습\'에 해당합니다.'});
+ LEC.push({k:'m',w:3,grp:g6,q:'문제 2. 범이론적모형(변화단계모델)에서, 문제 행동을 인식하고 있으나 6개월 이내에 행동변화를 실행할 의지는 아직 없는 단계는?',c:'',o:['고려전단계','고려단계','준비단계','실행단계','유지단계'],a:1,e:'정답 ② — 고려단계는 문제를 인식하나 실행 의지는 아직 없는 단계입니다. 고려전단계는 문제 자체를 인식하지 못하는 단계로 혼동하지 않도록 주의하세요.'});
+ const g7='3주차 강의안 p.32 · 생각해보기 — 5개 이론을 나의 언어로 정리해보면';
+ [['1.  HBM, TPB, 사회인지이론, 변화단계모델 — 이 4가지 이론을 한 문장씩으로 요약해본다면?','예) HBM: 위험을 느끼고 이익이 장애보다 크면 예방행동을 한다. / TPB: 태도·주변 기대·실천 가능성이 의도를 만들고 의도가 행동이 된다. / 사회인지이론: 개인·행동·환경이 서로 영향을 주며 행동이 만들어진다. / 변화단계모델: 행동변화는 단계적으로 일어나므로 단계에 맞는 전략이 필요하다.'],
+  ['2.  내가 최근 시도한 행동변화 하나를 정해, 4가지 이론 중 가장 잘 설명되는 이론은 무엇일까?','정답 없음 — 사례 단서로 고른다. 위험 인식이 계기면 HBM, 주변 기대·의도면 TPB, 남을 보고 따라 했으면 사회인지이론, 단계가 보이면 변화단계모델.'],
+  ['3.  지역사회 영양사업을 기획할 때, 왜 개인 수준 이론뿐 아니라 지역사회 수준 이론도 함께 필요할까?','개인 수준 이론은 개인의 인식·의도는 설명하지만 환경·정책·확산은 다루지 못한다(예: 변화단계모델은 사회환경적 요인 고려가 부족). 지역사회 전체의 행동변화를 위해서는 사회마케팅·개혁확산모델·PRECEDE-PROCEED 같은 지역사회 수준 접근이 함께 필요하다.']
+ ].forEach(([q,a])=>LEC.push({k:'s',w:3,grp:g7,q,c:'',keys:null,a}));
+ LEC.forEach((q,i)=>q.id='L'+i);
+})();
+
 
 const MK=['①','②','③','④','⑤'];
 const $=id=>document.getElementById(id);
@@ -594,23 +638,25 @@ function dropNote(q){NOTE=NOTE.filter(n=>keyOf(n)!==keyOf(q));ls.set('cn-wrong',
 function newSet(){setNo++;SET=makeSet();SET.forEach((q,i)=>q.id='r'+setNo+'-'+i);st={};shuffled=false;render()}
 function pool(){
   if(mode==='bank')return BANK;
+  if(mode==='lec')return LEC;
   if(mode==='note')return NOTE.map((q,i)=>(q.id='n'+i,q));
   return SET;
 }
-const stateOf=q=>mode==='bank'?bankSt[q.id]:st[q.id];
-function setState(q,v){if(mode==='bank'){bankSt[q.id]=v;ls.set('cn-quiz-v2',bankSt)}else st[q.id]=v;
+const persist=()=>mode==='bank'||mode==='lec';
+const stateOf=q=>persist()?bankSt[q.id]:st[q.id];
+function setState(q,v){if(persist()){bankSt[q.id]=v;ls.set('cn-quiz-v2',bankSt)}else st[q.id]=v;
   const ok=q.k==='m'?v===q.a:(v&&v.ok);if(ok===false)addNote(q);else if(ok===true&&mode==='note'){} }
 const result=q=>{const v=stateOf(q);if(v===undefined)return undefined;return q.k==='m'?v===q.a:v.ok};
 
 function mkTabs(el,items,get,set){el.innerHTML='';items.forEach(([k,l])=>{const b=document.createElement('button');b.className='tab';b.textContent=l;b.dataset.k=k;
   b.setAttribute('aria-pressed',k===get());b.onclick=()=>{set(k);[...el.children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.k===k));render()};el.appendChild(b)})}
-mkTabs($('modes'),[['theory','이론 정리'],['rand','랜덤 세트'],['bank','문제은행 200'],['note','오답노트']],()=>mode,v=>{mode=v;shuffled=false});
+mkTabs($('modes'),[['theory','이론 정리'],['lec','강의안 문제'],['rand','랜덤 세트'],['bank','문제은행 200'],['note','오답노트']],()=>mode,v=>{mode=v;shuffled=false});
 mkTabs($('tabs'),[['all','전체'],...[2,3,4,5,6].map(w=>[String(w),w+'주차'])],()=>week,v=>week=v);
 mkTabs($('kinds'),[['all','객관식+주관식'],['m','객관식'],['s','주관식']],()=>kind,v=>kind=v);
 $('wrongOnly').onclick=e=>{wrongOnly=!wrongOnly;e.target.setAttribute('aria-pressed',wrongOnly);render()};
 $('shuffle').onclick=()=>{shuffled=true;render()};
 $('newset').onclick=()=>{newSet();window.scrollTo({top:0})};
-$('reset').onclick=()=>{scope().forEach(q=>{if(mode==='bank')delete bankSt[q.id];else delete st[q.id]});ls.set('cn-quiz-v2',bankSt);render()};
+$('reset').onclick=()=>{scope().forEach(q=>{if(persist())delete bankSt[q.id];else delete st[q.id]});ls.set('cn-quiz-v2',bankSt);render()};
 
 const scope=()=>pool().filter(q=>(week==='all'||String(q.w)===week)&&(kind==='all'||q.k===kind));
 let order=null;
@@ -626,10 +672,10 @@ function render(){
   if(!shown.length){list.innerHTML=`<p class="empty">${mode==='note'?'아직 틀린 문제가 없어요. 틀린 문제는 세트가 바뀌어도 여기에 모여요.':wrongOnly?'틀린 문제가 없어요.':'문제가 없어요.'}</p>`;return}
   const cnt={};let last='';
   shown.forEach(q=>{
-    const sec=shuffled?'':q.w+q.k;
+    const sec=shuffled?'':(mode==='lec'?q.grp:q.w+q.k);
     if(sec&&sec!==last){last=sec;const h=document.createElement('h2');h.className='topic';
-      h.innerHTML=`${q.w}주차 ${q.k==='m'?'객관식':'주관식'}<small>${W[q.w]}</small>`;list.appendChild(h)}
-    const ck=q.w+q.k;cnt[ck]=(cnt[ck]||0)+1;q.no=(q.k==='m'?'':'주관 ')+q.w+'-'+cnt[ck];
+      h.innerHTML=mode==='lec'?`${q.grp.split(' · ')[0]}<small>${q.grp.split(' · ').slice(1).join(' · ')}</small>`:`${q.w}주차 ${q.k==='m'?'객관식':'주관식'}<small>${W[q.w]}</small>`;list.appendChild(h)}
+    const ck=mode==='lec'?q.grp:q.w+q.k;cnt[ck]=(cnt[ck]||0)+1;q.no=mode==='lec'?String(cnt[ck]):(q.k==='m'?'':'주관 ')+q.w+'-'+cnt[ck];
     list.appendChild(q.k==='m'?cardM(q):cardS(q));
   });
 }
@@ -655,7 +701,7 @@ function cardS(q){
   const tag=document.createElement('p');tag.className='kind';tag.textContent=essay?'서술형 · 쓰고 나서 모범답안과 비교해 스스로 채점':'단답형 · 핵심어가 들어가면 자동 정답';el.appendChild(tag);
   const ta=document.createElement(essay?'textarea':'input');ta.className='ans';ta.id='a-'+q.id;
   if(!essay)ta.type='text';ta.placeholder=essay?'답을 써보세요':'정답 입력';ta.value=v?v.t||'':'';
-  ta.oninput=()=>{const cur=stateOf(q)||{};cur.t=ta.value;if(mode==='bank'){bankSt[q.id]=cur;ls.set('cn-quiz-v2',bankSt)}else st[q.id]=cur};
+  ta.oninput=()=>{const cur=stateOf(q)||{};cur.t=ta.value;if(persist()){bankSt[q.id]=cur;ls.set('cn-quiz-v2',bankSt)}else st[q.id]=cur};
   if(!essay)ta.onkeydown=e=>{if(e.key==='Enter')chk.click()};
   el.appendChild(ta);
   const row=document.createElement('div');row.className='srow';
