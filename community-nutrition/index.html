@@ -1297,7 +1297,7 @@ let order=null;
 function render(){
   const ff=SUBJ==='ff'||SUBJ==='sj'||SUBJ==='dt';
   $('newset').hidden=!(mode==='rand'||(ff&&mode!=='note'&&mode!=='sth'));$('newset').textContent=ff?'새로 섞기':'새 세트 만들기';
-  $('aiRow').hidden=!aiReady()||['note','theory','sth','lec','bank'].includes(mode)||(SUBJ==='cn'&&mode!=='rand');
+  $('aiRow').hidden=!aiReady()||SUBJ!=='sj'||['note','sth'].includes(mode); // AI 새 문제는 실험조리만
   const th=mode==='theory'||mode==='sth';$('kinds').hidden=th||ff;$('toolsRow').hidden=th;
   const list=$('list');list.innerHTML='';
   if(mode==='sth'){(week==='all'?Object.keys(SJTH):[week]).forEach(w=>{const s=document.createElement('section');s.className='theory';s.innerHTML=`<h2 class="topic">${SW[w]}</h2>${SJTH[w]}`;list.appendChild(s)});return}
@@ -1402,7 +1402,7 @@ async function aiFetch(T){
   return d.questions||[];
 }
 $('aiBtn').onclick=async()=>{
-  if(!aiReady())return;const T=aiTopic(),subj=SUBJ;
+  if(!aiReady()||SUBJ!=='sj')return;const T=aiTopic(),subj=SUBJ;
   const btn=$('aiBtn'),msg=$('aiMsg');btn.disabled=true;msg.textContent=`${T.label} 새 문제 만드는 중… (보통 10~40초)`;
   try{
     const arr=(await aiFetch(T)).filter(x=>x&&x.q&&Array.isArray(x.o)&&x.o.length>=2&&Number.isInteger(x.a)&&x.a>=0&&x.a<x.o.length);

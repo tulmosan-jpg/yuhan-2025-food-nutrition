@@ -3,7 +3,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 // 중간고사 문제 사이트 → Claude API 중계. 키는 서버 비밀값(ANTHROPIC_API_KEY)에만 있음.
 const ALLOWED = ["https://tulmosan-jpg.github.io"];
-const SUBJ: Record<string, string> = { cn: "지역사회영양학", ff: "기능성식품학", sj: "실험조리", dt: "식사요법 및 실습" };
+const SUBJ: Record<string, string> = { sj: "실험조리" }; // AI 새 문제는 실험조리만 허용
 const MODEL = Deno.env.get("MODEL") ?? "claude-haiku-4-5-20251001";
 const IP_LIMIT = Number(Deno.env.get("IP_LIMIT") ?? 20);   // 한 사람(IP) 24시간 호출 수
 const DAY_LIMIT = Number(Deno.env.get("DAY_LIMIT") ?? 300); // 전체 24시간 호출 수
