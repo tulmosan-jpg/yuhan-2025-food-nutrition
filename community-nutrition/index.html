@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="지역사회영양학 2~6주차 변형문제·이론 정리">
-<title>지역사회영양학 변형문제</title>
+<title>중간고사 문제 정리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <style>
@@ -94,7 +94,7 @@ textarea.ans{min-height:100px;resize:vertical}
 
 <div class="wrap">
   <header class="top">
-    <h1>지역사회영양학 변형문제</h1>
+    <h1>중간고사 문제 정리</h1>
     <p class="sub">2~7주차 활동지·강의안 기반 · 새로고침하거나 ‘새 세트’를 누를 때마다 인물·상황·숫자가 바뀐 새 문제 세트(주차별 객관식 20 + 주관식 5)</p>
   </header>
   <div class="bar">
@@ -1280,7 +1280,7 @@ const SUBJECTS={cn:{name:'지역사회영양학 변형문제',sub:'2~7주차 활
   weeks:[['all','전체'],['1','1~2주 법률·제조'],['3','3주 체지방'],['4','4주 혈당'],['5','5주 혈행'],['6','6주 혈압'],['7','7주 항산화']]}};
 function setupSubject(){
   const S0=SUBJECTS[SUBJ];mode=S0.def;week='all';kind='all';shuffled=false;if(SUBJ==='sj'){setNo++;makeSJ();st={}}if(SUBJ==='dt'&&!DTSET.length){setNo++;makeDT()}
-  document.querySelector('header.top h1').textContent=S0.name;document.querySelector('header.top .sub').textContent=S0.sub;
+  document.querySelector('header.top h1').textContent='중간고사 문제 정리';document.querySelector('header.top .sub').textContent=S0.name+' · '+S0.sub;
   mkTabs($('modes'),S0.modes,()=>mode,v=>{mode=v;shuffled=false;if(SUBJ==='sj'&&v!=='note'){setNo++;makeSJ()}});
   mkTabs($('tabs'),S0.weeks,()=>week,v=>week=v);
   [...$('kinds').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.k==='all'));
