@@ -87,6 +87,17 @@ textarea.ans{min-height:100px;resize:vertical}
 .tw tbody th{font-weight:600;white-space:nowrap}
 .tbox{margin:8px 0;padding:10px 12px;background:var(--soft);border-radius:4px;font-size:.9rem}
 .tbox b{margin-right:8px}
+.sumt{border-collapse:collapse;width:100%;font-size:.88rem;margin:8px 0 18px}
+.sumt th,.sumt td{text-align:left;vertical-align:top;padding:8px 10px}
+.sumt thead th{font-size:.78rem;color:var(--muted);font-weight:600}
+.sumt tbody tr:nth-child(odd){background:var(--soft)}
+.sumt td.sumans{width:42%;font-weight:600}
+.sumk{display:inline-block;margin:6px 0 2px;font-weight:700}
+.tbox .sumans{margin-top:6px}
+.hideans .sumans{cursor:pointer;outline:1px dashed var(--muted);outline-offset:-3px}
+.hideans .sumans,.hideans .sumans *{color:transparent!important}
+.hideans .sumans.show,.hideans .sumans.show *{color:inherit!important}
+.hideans .sumans.show{outline:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -1075,6 +1086,49 @@ ${T([['황산칼슘','응고 완만해 편리, 수율·색 좋음 / 표면 거�
 ${BOX('두부','응고제는 대두의 1~2%, 많을수록·가열온도 높을수록 단단. 고형분: 경두부 22% 이상, 일반 12% 이상, 연두부·순두부 6% 이상. 물에서 오래 끓이면 유리 칼슘이온이 단백질과 결합해 구멍·단단 → 단시간 가열. 된장찌개는 나트륨이온이 방해해 부드러움')}`
 };
 
+// 실험조리 암기 정리: 서술형 · 단답형 · 계산·숫자
+function renderSJSUM(list){
+  const esc2=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const units=week==='all'?Object.keys(SW):[week];
+  let h=`<section class="theory"><h2 class="topic">암기 정리<small>서술형 2 · 단답형 ${SSA.length} · 계산·숫자</small></h2>
+<div class="srow"><button class="btn" id="sumHide">답 가리기</button><span class="hint">답을 가리고 눌러서 하나씩 확인하며 외우기</span></div>`;
+  // 1. 서술형
+  h+=`<h3>Ⅰ. 서술형 (호화·노화 영향 요인)</h3>`;
+  SES.forEach((q,i)=>{const [head,...rest]=q[2].split('\n');
+    h+=`<div class="tbox"><b>${i+1}. ${esc2(q[1])}</b><br><span class="sumk">${esc2(head)}</span><div class="sumans">${rest.map(esc2).join('<br>')}</div></div>`});
+  // 2. 단답형
+  h+=`<h3>Ⅱ. 단답형 ${week==='all'?'전체':SW[week]}</h3>`;
+  units.forEach(u=>{const qs=SSA.filter(q=>String(q[0])===String(u));if(!qs.length)return;
+    h+=`<table class="sumt"><thead><tr><th>${esc2(SW[u])} · ${qs.length}</th><th>답</th></tr></thead><tbody>`+
+      qs.map(q=>`<tr><td>${BEAN.has(q[1])?'<b>★</b> ':''}${esc2(q[1])}</td><td class="sumans">${esc2(q[3])}</td></tr>`).join('')+`</tbody></table>`});
+  // 3. 계산·숫자
+  h+=`<h3>Ⅲ. 계산문제</h3>
+<div class="tbox"><b>① 수분흡수율 (객관식 계산 고정 출제)</b><br>
+【공식】 수분흡수율(%) = (침지 후 무게 − 침지 전 무게) ÷ <u>침지 전 무게</u> × 100<br>
+<span class="sumk">외우기: 늘어난 만큼 ÷ 처음 무게</span>
+<div class="sumans">【예】 쌀 100 g → 침지 후 128 g : (128 − 100) ÷ 100 × 100 = <b>28%</b><br>
+【예】 찹쌀 150 g → 189 g : 39 ÷ 150 × 100 = <b>26%</b><br>
+【함정 보기】 128 ÷ 100 × 100 = 128% (늘어난 양이 아니라 전체 비율) / 28 ÷ 128 × 100 ≈ 21.9% (분모를 침지 후 무게로 나눔) → 둘 다 오답</div></div>
+<div class="tbox"><b>② 섭씨 ↔ 화씨</b><br>【공식】 ℉ = 9/5 × ℃ + 32 &nbsp;/&nbsp; ℃ = (℉ − 32) × 5/9
+<div class="sumans">【예】 100℃ → 9/5 × 100 + 32 = <b>212℉</b><br>【예】 0℃ → <b>32℉</b> / 180℃ → 324 + 32 = <b>356℉</b></div></div>
+<div class="tbox"><b>③ 끓는점 오름 · 어는점 내림</b><br>【기준】 물 1 L에 설탕 1몰(342 g) → 끓는점 <b>0.52℃ 상승</b>, 어는점 <b>1.86℃ 하강</b>
+<div class="sumans">소금(NaCl)은 물에서 Na⁺·Cl⁻로 이온화 → 입자 수 2배 → 효과도 2배(끓는점 약 1.04℃↑, 어는점 약 3.72℃↓)<br>압력솥: 기압↑ → 끓는점↑ → 더 높은 온도에서 빨리 조리</div></div>
+<h3>Ⅳ. 꼭 외울 숫자</h3>
+<table class="sumt"><thead><tr><th>항목</th><th>숫자</th></tr></thead><tbody>${[
+['1컵 (한국·일본 / 국제)','200 mL / 약 240 mL'],['1큰술 / 1작은술','15 mL / 5 mL'],['1파운드(lb) / 1온스(oz)','약 454 g(16 oz) / 28.35 g'],
+['기화열 / 용해열','540 cal/g / 80 cal/g'],['물의 부피가 가장 작은 온도','4℃'],['소비자 패널 최소 인원','24명'],
+['쌀 침지 수분 흡수','약 25~30%'],['밥물 (쌀 기준)','무게 1.4~1.5배, 부피 1.2배'],['맛있는 밥','수분 60.5~66.5%, 쌀 무게의 2.2~2.4배'],
+['물의 양 (부피비)','흰밥 1.2 · 찰밥 0.9 · 죽 5~6 · 미음 8~10 · 국수 삶는 물 6~7배'],['호화 온도','60~65℃ 시작, 100℃ 약 20분 완전 호화'],
+['노화 잘 되는 조건','수분 30~60%, 0~4℃ (60℃ 이상·0℃ 이하, 수분 15% 이하면 억제)'],['호정화(덱스트린화)','160~170℃ 건열'],['호화 억제 설탕 농도','50% 이상'],
+['강력분 글루텐 (건부율 / 습부율)','13% 이상 / 35% 이상'],['이스트 발효 최적 온도','28~30℃'],['수증기 팽창','약 1,600배'],
+['콩 물 흡수','원래 무게의 90% 이상'],['콩 연화 중탄산나트륨','0.3%'],['글리시닌 등전점','pH 4~5'],['두부 응고제 양','대두의 1~2%'],
+['두부 고형분','경두부 22% · 일반 12% · 연두부·순두부 6% 이상']
+].map(r=>`<tr><td>${r[0]}</td><td class="sumans">${r[1]}</td></tr>`).join('')}</tbody></table></section>`;
+  list.innerHTML=h;
+  const b=$('sumHide');b.onclick=()=>{const on=list.classList.toggle('hideans');b.textContent=on?'답 보이기':'답 가리기';list.querySelectorAll('.sumans.show').forEach(x=>x.classList.remove('show'))};
+  list.onclick=e=>{const a=e.target.closest('.sumans');if(a&&list.classList.contains('hideans'))a.classList.toggle('show')};
+}
+
 // ===== 식사요법 및 실습: 프린트 연습문제 (원문 그대로, 순서·보기 위치만 랜덤) =====
 // [주제, 문제, 보기[], 정답 index, 해설]
 const DT=[];
@@ -1248,7 +1302,7 @@ function sjItems(){
 }
 function makeSJ(){
   const I=sjItems(),pick=(arr,f,n)=>shuf(arr.filter(f)).slice(0,n);
-  if(mode==='sth'){SJSET=[];return}
+  if(mode==='sth'||mode==='ssum'){SJSET=[];return}
   if(mode==='s100'){ // 시험 비율(9:11:2:13)로 100문제
     const ox=[...pick(I.ox,q=>q.w===1,3),...pick(I.ox,q=>q.w===4,8),...pick(I.ox,q=>q.w===5,9),...pick(I.ox,q=>q.w===2,6)];
     const sa=[...I.sa.filter(q=>q.must),...pick(I.sa,q=>!q.must,33-I.sa.filter(q=>q.must).length)],es=I.es.slice(0,2);
@@ -1297,7 +1351,7 @@ const SUBJECTS={cn:{name:'지역사회영양학 변형문제',sub:'2~7주차 활
   modes:[['theory','이론 정리'],['lec','강의안 문제'],['rand','랜덤 세트'],['bank','문제은행 240'],['note','오답노트']],def:'rand',
   weeks:[['all','전체'],...[2,3,4,5,6,7].map(w=>[String(w),w+'주차'])]},
  sj:{name:'실험조리 시험대비',sub:'교재·프린트 정리 기반 · 모의고사 35는 시험 구성 그대로(OX 9 · 단답 11 · 주관식 2 · 객관식 13), 실전 100은 같은 비율로 100문제 · ‘새로 섞기’를 누를 때마다 문제가 바뀌어요',
-  modes:[['sth','이론 정리'],['smock','모의고사 35'],['s100','실전 100'],['sox','OX'],['ssa','단답형'],['ses','서술형'],['smc','객관식'],['note','오답노트']],def:'smock',
+  modes:[['sth','이론 정리'],['ssum','암기 정리'],['smock','모의고사 35'],['s100','실전 100'],['sox','OX'],['ssa','단답형'],['ses','서술형'],['smc','객관식'],['note','오답노트']],def:'smock',
   weeks:[['all','전체'],...Object.entries(SW).map(([k,v])=>[k,v])]},
  dt:{name:'식사요법 및 실습 연습문제',sub:'프린트 문제 107개 그대로 · 새로고침하거나 ‘새로 섞기’를 누를 때마다 문제 순서와 보기 위치가 바뀌어요 · 계산문제는 해설에 공식·풀이 포함',
   modes:[['dmix','전체 랜덤 107'],['note','오답노트']],def:'dmix',
@@ -1324,10 +1378,11 @@ let order=null;
 function render(){
   const ff=SUBJ==='ff'||SUBJ==='sj'||SUBJ==='dt';
   $('newset').hidden=!(mode==='rand'||(ff&&mode!=='note'&&mode!=='sth'));$('newset').textContent=ff?'새로 섞기':'새 세트 만들기';
-  $('aiRow').hidden=!aiReady()||SUBJ!=='sj'||['note','sth'].includes(mode); // AI 새 문제는 실험조리만
-  const th=mode==='theory'||mode==='sth';$('kinds').hidden=th||ff;$('toolsRow').hidden=th;
-  const list=$('list');list.innerHTML='';
+  $('aiRow').hidden=!aiReady()||SUBJ!=='sj'||['note','sth','ssum'].includes(mode); // AI 새 문제는 실험조리만
+  const th=mode==='theory'||mode==='sth'||mode==='ssum';$('kinds').hidden=th||ff;$('toolsRow').hidden=th;
+  const list=$('list');list.innerHTML='';list.classList.remove('hideans');
   if(mode==='sth'){(week==='all'?Object.keys(SJTH):[week]).forEach(w=>{const s=document.createElement('section');s.className='theory';s.innerHTML=`<h2 class="topic">${SW[w]}</h2>${SJTH[w]}`;list.appendChild(s)});return}
+  if(mode==='ssum'){renderSJSUM(list);return}
   if(th){renderTheory(list);return}
   const sc=scope(), done=sc.filter(q=>result(q)!==undefined), ok=done.filter(q=>result(q));
   $('score').innerHTML=`${mode==='rand'&&!ff?`세트 #${setNo} · `:''}푼 문제 <b>${done.length}</b>/${sc.length} · 정답 <b>${ok.length}</b> · 오답 <b>${done.length-ok.length}</b>`;
