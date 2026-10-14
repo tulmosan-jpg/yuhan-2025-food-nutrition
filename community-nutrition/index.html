@@ -51,6 +51,7 @@ h1{font-family:var(--f-display);font-weight:700;font-size:1.8rem;margin:0;text-w
 .stem{font-family:var(--f-display);font-size:1.05rem;min-width:0}
 .case{display:block;background:var(--soft);border-radius:4px;padding:10px 12px;margin-top:8px;font-family:var(--f-body);font-size:.92rem;white-space:pre-line}
 .aitag{display:block;width:fit-content;margin-top:6px;font-family:var(--f-body);font-size:.72rem;color:var(--muted)}
+.aitag.must{color:var(--ink);font-weight:700}
 .opts{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:2px}
 .opt{width:100%;text-align:left;font:inherit;font-size:.93rem;background:transparent;color:var(--ink);border:0;border-radius:4px;padding:7px 10px;cursor:pointer;display:flex;gap:8px}
 .opt:hover:not(:disabled){background:var(--soft)}
@@ -932,6 +933,30 @@ const SSA=[
 [8,'천일염에서 흘러나온 여액으로, 두부의 천연 응고제로 쓰이는 것은?',[['간수']],'간수'],
 [8,'팥·녹두·대두를 삶을 때 거품이 많이 일어나게 하는 성분은?',[['사포닌']],'사포닌']
 ];
+// ★ 무조건 출제(필기): 콩 유해물질·연화방법·용해성/응고성
+const BEAN_SA=[
+[8,'날콩에 들어 있는 유해물질 3가지를 쓰시오.',[['트립신'],['사포닌'],['헤마글루티닌','헤마글루니틴']],'트립신 저해제, 사포닌, 헤마글루티닌 → 소화흡수율이 낮아지고 설사'],
+[8,'콩의 유해물질(트립신 저해제·사포닌·헤마글루티닌)이 몸에 미치는 영향 2가지는?',[['소화','흡수'],['설사']],'소화흡수율이 낮아지고 설사를 일으킨다'],
+[8,'단백질 소화효소를 방해해 콩의 소화흡수율을 떨어뜨리는 유해물질은?',[['트립신']],'트립신 저해제'],
+[8,'콩을 빨리 무르게(연화) 하기 위해 0.3% 정도 넣는 알칼리성 물질은?',[['중탄산나트륨','식소다','중조','탄산수소나트륨','베이킹소다']],'중탄산나트륨(식소다) 0.3%'],
+[8,'콩 연화를 위해 넣는 중탄산나트륨의 적당한 농도는 몇 %인가?',[['0.3']],'0.3%'],
+[8,'콩 연화방법: 중탄산나트륨(0.3%), 탄산칼슘 등 (     ) 물질을 첨가한다.',[['알칼리']],'알칼리성 물질'],
+[8,'콩의 주 단백질 글리시닌이 산이나 금속염에 의해 응고되는 등전점은 pH 얼마 정도인가?',[['4~5','4-5','4.5','4']],'pH 4~5'],
+[8,'글리시닌은 열에 (     )하여 가열만으로는 응고되지 않는다.',[['안정']],'안정'],
+[8,'글리시닌이 등전점(pH 4~5) 부근에서 무엇에 의해 응고되는지 2가지를 쓰시오.',[['산'],['금속염','염']],'산이나 금속염(칼슘염·마그네슘염·간수 등)'],
+[8,'글리시닌이 산이나 금속염에 의해 응고되는 성질을 이용해 만드는 식품은?',[['두부']],'두부']
+];
+const BEAN_MC=[
+[8,'콩에 들어 있는 유해물질이 아닌 것은?',['트립신 저해제','사포닌','헤마글루티닌','글리시닌'],3,'유해물질 = 트립신 저해제·사포닌·헤마글루티닌. 글리시닌은 콩의 주 단백질.'],
+[8,'날콩의 유해물질(트립신 저해제·사포닌·헤마글루티닌)이 미치는 영향으로 옳은 것은?',['소화흡수율이 낮아지고 설사를 일으킨다','단백질 소화율이 높아진다','콩이 빨리 연화된다','두부가 잘 응고된다'],0,'필기: 유해물질 → 소화흡수율이 낮아지고 설사.'],
+[8,'콩을 빨리 연화시키는 방법으로 옳은 것은?',['중탄산나트륨(0.3%) 등 알칼리성 물질을 첨가한다','식초를 넣어 산성으로 삶는다','간수를 넣고 삶는다','등전점(pH 4~5)으로 맞춰 삶는다'],0,'필기: 중탄산나트륨(0.3%), 탄산칼슘 등 알칼리성 물질 첨가. 단 비타민 B₁이 파괴된다.'],
+[8,'콩 연화에 사용하는 중탄산나트륨의 적당한 농도는?',['0.03%','0.3%','3%','10%'],1,'0.3% 정도. 너무 많으면 맛이 나빠지고 비타민 B₁ 파괴가 커진다.'],
+[8,'대두 단백질 글리시닌의 성질로 옳은 것은?',['물에 넣어두면 용출되고, 열에 안정하다','물에 전혀 녹지 않는다','가열하면 바로 응고한다','알칼리를 넣으면 응고한다'],0,'필기: 글리시닌은 물에 넣어두면 용출, 열에 안정.'],
+[8,'글리시닌이 산이나 금속염에 의해 응고되는 등전점은?',['pH 2~3','pH 4~5','pH 7','pH 9~10'],1,'필기: 등전점 pH 4~5 정도에서 산이나 금속염에 의해 응고 → 두부.'],
+[8,'콩의 용해성·응고성을 이용한 식품과 원리가 옳게 연결된 것은?',['두부 – 글리시닌이 등전점(pH 4~5)에서 산이나 금속염에 응고','두부 – 글리시닌이 가열만으로 응고','두유 – 글리시닌이 알칼리에 응고','된장 – 글리시닌이 설탕에 응고'],0,'글리시닌은 열에 안정하므로 가열만으로는 응고되지 않는다.']
+];
+SSA.push(...BEAN_SA);
+const BEAN=new Set([...BEAN_SA,...BEAN_MC].map(q=>q[1]));
 // 서술형
 const SES=[
 [5,'전분의 호화에 영향을 주는 요인을 2가지 이상 쓰고 설명하시오.','외우기: 종·수·산·설·지 (2가지면 ①수분 ②설탕 추천)\n① 전분 종류 – 아밀로펙틴(찹쌀)은 호화가 어렵다\n② 수분 – 많을수록 호화가 잘 된다\n③ 산(pH) – pH 4 이하면 가수분해되어 점도가 낮아진다\n④ 설탕 – 50% 이상이면 호화가 지연된다\n⑤ 지방·단백질 – 전분을 코팅해 호화를 억제한다'],
@@ -989,6 +1014,7 @@ function genAbsorb(){
   const oo=shuf(o.slice(0,4)).map(x=>x+'%');
   return {k:'m',typ:'mc',w:5,q:`${grain} ${W0} g을 물에 ${t} 침지한 뒤 물기를 빼고 무게를 재니 ${A} g이었다. 수분흡수율은?`,c:'',o:oo,a:oo.indexOf(r+'%'),e:`수분흡수율(%) = (침지 후 − 침지 전) ÷ 침지 전 × 100 = (${A} − ${W0}) ÷ ${W0} × 100 = ${r}%. 침지 후 무게로 나누거나(${Math.round((A-W0)/A*1000)/10}%) 침지 후 무게 비율(${Math.round(A/W0*100)}%)을 답하지 않게 주의.`,gen:1};
 }
+SMC.push(...BEAN_MC);
 
 
 // ===== 실험조리 이론 정리 =====
@@ -1036,6 +1062,7 @@ ${BOX('부족 아미노산','밀가루 단백질은 라이신·트립토판이 �
 7:`<h3>팽창제</h3>
 ${T([['물리적','공기','체 치기·크리밍·흰자 거품 → 엔젤푸드·스펀지케이크'],['물리적','수증기','부피 약 1,600배 → 크래커, 크림퍼프'],['생물학적','이스트','당 → 치마아제 → 2CO₂ + 2C₂H₅OH, 최적 28~30℃(프린트), 너무 높으면 사멸'],['화학적','식소다(NaHCO₃)','2NaHCO₃ → CO₂ + H₂O + Na₂CO₃, 탄산나트륨이 플라본 색소를 누렇게, 쓴맛 → 산으로 중화'],['화학적','베이킹파우더','단일반응: 물에 즉시 CO₂ / 이중반응: 물에 1차 소량 + 가열로 본격(인산염 + 황산염)']],['분류','종류','특징'])}`,
 8:`<h3>암기 카드</h3>
+${BOX('★ 무조건 출제 (필기 그대로)','<br>1. 콩 유해물질 — 트립신 저해제, 사포닌, 헤마글루티닌 → 소화흡수율이 낮아지고 설사<br>2. 콩 연화방법 — 중탄산나트륨(0.3%), 탄산칼슘 등 알칼리성 물질 첨가<br>3. 콩 용해성·응고성 — 글리시닌은 물에 넣어두면 용출 / 열에 안정, 등전점 pH 4~5 정도에서 산이나 금속염에 의해 응고 → 두부')}
 ${T([['사포닌','거품이 많이 남, 위·장 자극 → 설사 (팥에 많음)'],['트립신 저해제','단백질 소화효소(트립신) 방해 → 소화흡수율↓'],['헤마글루티닌','적혈구 응집']],['① 유해물질 — 사·트·헤','내용'])}
 ${BOX('유해물질 한 줄','날콩·덜 익힌 콩에는 사포닌·트립신 저해제·헤마글루티닌 → 충분히 가열 조리해야 소화흡수율↑, 설사 예방')}
 ${T([['물에 불리기','충분히 불리면 콩 무게의 90% 이상 흡수 → 고르게 익고 조리시간 단축 (팥·녹두는 불리지 않고 바로 삶는 게 빠름)'],['물 온도','높을수록 흡수가 빠름'],['식소다(중조) 0.3%','알칼리 → 섬유소 연화·팽윤, 단 비타민 B₁ 파괴'],['1% 소금물','대두 단백질 글리시닌이 소금물에 녹아 연화']],['② 연화 방법 — 불·온·소다·소금','내용'])}
@@ -1214,9 +1241,9 @@ function makeDT(){
 let SJSET=[];
 function sjItems(){
   const ox=SOX.map(q=>({k:'m',ox:true,typ:'ox',w:q[0],q:q[1],c:'',o:['O','X'],a:q[2]?0:1,e:q[3]}));
-  const sa=SSA.map(q=>({k:'s',typ:'sa',w:q[0],q:q[1],c:'',keys:q[2],a:q[3]}));
+  const sa=SSA.map(q=>({k:'s',typ:'sa',w:q[0],q:q[1],c:'',keys:q[2],a:q[3],must:BEAN.has(q[1])?1:0}));
   const es=SES.map(q=>({k:'s',typ:'es',w:q[0],q:q[1],c:'',keys:null,a:q[2]}));
-  const mc=SMC.map(q=>{const o=shuf(q[2].map((x,i)=>({x,i})));return {k:'m',typ:'mc',w:q[0],q:q[1],c:'',o:o.map(v=>v.x),a:o.findIndex(v=>v.i===q[3]),e:q[4]}});
+  const mc=SMC.map(q=>{const o=shuf(q[2].map((x,i)=>({x,i})));return {k:'m',typ:'mc',w:q[0],q:q[1],c:'',o:o.map(v=>v.x),a:o.findIndex(v=>v.i===q[3]),e:q[4],must:BEAN.has(q[1])?1:0}});
   return {ox,sa,es,mc};
 }
 function makeSJ(){
@@ -1224,15 +1251,15 @@ function makeSJ(){
   if(mode==='sth'){SJSET=[];return}
   if(mode==='s100'){ // 시험 비율(9:11:2:13)로 100문제
     const ox=[...pick(I.ox,q=>q.w===1,3),...pick(I.ox,q=>q.w===4,8),...pick(I.ox,q=>q.w===5,9),...pick(I.ox,q=>q.w===2,6)];
-    const sa=pick(I.sa,()=>true,33),es=I.es.slice(0,2);
-    const mc=[genAbsorb(),genAbsorb(),...pick(I.mc,()=>true,37)];
+    const sa=[...I.sa.filter(q=>q.must),...pick(I.sa,q=>!q.must,33-I.sa.filter(q=>q.must).length)],es=I.es.slice(0,2);
+    const mc=[genAbsorb(),genAbsorb(),...I.mc.filter(q=>q.must),...pick(I.mc,q=>!q.must,37-I.mc.filter(q=>q.must).length)];
     SJSET=[...shuf(ox),...shuf(sa),...es,...shuf(mc)];
   } else if(mode==='smock'){
     const ox=[...pick(I.ox,q=>q.w===1,1),...pick(I.ox,q=>q.w===4,3),...pick(I.ox,q=>q.w===5,3),...pick(I.ox,q=>q.w===2,2)];
     const g=pick(I.sa,q=>q.w===6&&/글루텐|글리아딘/.test(q.q+q.a),1),p=pick(I.sa,q=>q.w===7,1);
-    const sa=[...g,...p,...pick(I.sa,q=>!g.includes(q)&&!p.includes(q),9)];
+    const b=pick(I.sa,q=>q.must,2);const sa=[...g,...p,...b,...pick(I.sa,q=>!g.includes(q)&&!p.includes(q)&&!q.must,7)];
     const es=I.es.slice(0,2);
-    const mc=[genAbsorb(),...pick(I.mc,(q,i)=>!/128 g/.test(q.q),12)];
+    const mc=[genAbsorb(),...pick(I.mc,q=>q.must,2),...pick(I.mc,q=>!q.must&&!/128 g/.test(q.q),10)];
     SJSET=[...shuf(ox),...shuf(sa),...es,...shuf(mc)];
   } else {
     const key={sox:'ox',ssa:'sa',ses:'es',smc:'mc'}[mode];
@@ -1320,7 +1347,7 @@ function render(){
     list.appendChild(q.k==='m'?cardM(q):cardS(q));
   });
 }
-function head(q){const tag=q.t?`<span class="aitag">${q.t==='x'?'기출':'예상'} · ${FW[q.w]||''}</span>`:q.dt?`<span class="aitag">${DTW[q.w]||''}</span>`:q.typ?`<span class="aitag">${{ox:'OX',sa:'단답형',es:'서술형',mc:'객관식'}[q.typ]} · ${SW[q.w]||''}</span>`:'';return `<div class="qhead"><span class="num${q.k==='s'?' sub-num':''}">${q.no}</span><div class="stem">${esc(q.q)}${q.c?`<span class="case">${esc(q.c)}</span>`:''}${q.ai?'<span class="aitag">AI 생성</span>':''}${tag}</div></div>`}
+function head(q){const tag=q.t?`<span class="aitag">${q.t==='x'?'기출':'예상'} · ${FW[q.w]||''}</span>`:q.dt?`<span class="aitag">${DTW[q.w]||''}</span>`:q.typ?`${q.must?'<span class="aitag must">★ 무조건 출제</span>':''}<span class="aitag">${{ox:'OX',sa:'단답형',es:'서술형',mc:'객관식'}[q.typ]} · ${SW[q.w]||''}</span>`:'';return `<div class="qhead"><span class="num${q.k==='s'?' sub-num':''}">${q.no}</span><div class="stem">${esc(q.q)}${q.c?`<span class="case">${esc(q.c)}</span>`:''}${q.ai?'<span class="aitag">AI 생성</span>':''}${tag}</div></div>`}
 function noteBtn(el,q){if(mode!=='note')return;const b=document.createElement('button');b.className='btn ghost';b.textContent='오답노트에서 빼기';b.onclick=()=>{dropNote(q);render()};const r=document.createElement('div');r.className='srow';r.appendChild(b);el.appendChild(r)}
 function cardM(q){
   const a=stateOf(q),has=a!==undefined,el=document.createElement('article');
