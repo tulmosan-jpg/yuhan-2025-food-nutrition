@@ -109,7 +109,7 @@ textarea.ans{min-height:100px;resize:vertical}
       <button id="reset">이 범위 다시 풀기</button>
       <span class="score" id="score"></span>
     </div>
-    <div class="airow" id="aiRow" hidden><button id="aiBtn" class="btn">AI로 완전 새 문제 5개</button><span id="aiMsg" class="hint">선택한 주차(전체면 무작위 주차)로 Claude가 새 사례 문제를 만들어요.</span></div>
+    <div class="airow" id="aiRow" hidden><button id="aiBtn" class="btn">AI로 완전 새 문제 5개</button><span id="aiMsg" class="hint">선택한 범위(전체면 무작위 범위)로 Claude가 기존 문제와 다른 새 문제를 만들어요.</span></div>
   </div>
   <main id="list"></main>
 </div>
@@ -1251,7 +1251,7 @@ function pool(){
   }
   if(SUBJ==='ff'){
     if(mode==='note')return NOTE.filter(n=>n.subj==='ff').map((q,i)=>(q.id='nf'+i,q));
-    return FFSET.filter(q=>mode==='fmix'||(mode==='fx'?q.t==='x':q.t==='y'));
+    return FFSET.filter(q=>q.ai||mode==='fmix'||(mode==='fx'?q.t==='x':q.t==='y'));
   }
   if(mode==='bank')return BANK;
   if(mode==='lec')return LEC;
@@ -1297,7 +1297,7 @@ let order=null;
 function render(){
   const ff=SUBJ==='ff'||SUBJ==='sj'||SUBJ==='dt';
   $('newset').hidden=!(mode==='rand'||(ff&&mode!=='note'&&mode!=='sth'));$('newset').textContent=ff?'새로 섞기':'새 세트 만들기';
-  $('aiRow').hidden=ff||mode!=='rand'||!sampleFn;
+  $('aiRow').hidden=!aiReady()||['note','theory','sth','lec','bank'].includes(mode)||(SUBJ==='cn'&&mode!=='rand');
   const th=mode==='theory'||mode==='sth';$('kinds').hidden=th||ff;$('toolsRow').hidden=th;
   const list=$('list');list.innerHTML='';
   if(mode==='sth'){(week==='all'?Object.keys(SJTH):[week]).forEach(w=>{const s=document.createElement('section');s.className='theory';s.innerHTML=`<h2 class="topic">${SW[w]}</h2>${SJTH[w]}`;list.appendChild(s)});return}
@@ -1310,7 +1310,7 @@ function render(){
   const cnt={_:0};let last='';
   shown.forEach(q=>{
     if(ff){
-      if(SUBJ==='sj'&&(mode==='smock'||mode==='s100')&&q.typ!==last&&!shuffled){last=q.typ;const h=document.createElement('h2');h.className='topic';
+      if(SUBJ==='sj'&&(mode==='smock'||mode==='s100')&&!q.ai&&q.typ!==last&&!shuffled){last=q.typ;const h=document.createElement('h2');h.className='topic';
         h.innerHTML=(mode==='smock'?{ox:'Ⅰ. OX 문제<small>9문제 · 첫단원 1 · 관능검사 3 · 곡류 3 · 계량 2</small>',sa:'Ⅱ. 단답형<small>11문제 · 밀가루(글루텐)·팽창제 포함</small>',es:'Ⅲ. 주관식<small>2문제 · 호화·노화 영향 요인</small>',mc:'Ⅳ. 객관식<small>13문제 · 수분흡수율 계산 포함</small>'}:{ox:'Ⅰ. OX 문제<small>26문제</small>',sa:'Ⅱ. 단답형<small>33문제</small>',es:'Ⅲ. 주관식<small>2문제 · 호화·노화 영향 요인</small>',mc:'Ⅳ. 객관식<small>39문제 · 수분흡수율 계산 2 포함</small>'})[q.typ];list.appendChild(h)}
       q.no=String(++cnt._);list.appendChild(q.k==='m'?cardM(q):cardS(q));return}
     const sec=shuffled?'':(mode==='lec'?q.grp:q.w+q.k);
@@ -1370,22 +1370,53 @@ const TOPIC={2:'건강신념모델(HBM 6요소: 인지된 민감성·심각성·
 6:'영양교육안(교육목표·교육내용·교육방법·매체·평가방법), 목표에 맞는 교육방법(강의·실습(시연)·소그룹 토의·퀴즈·게임·식품모형·사진자료·식사섭취조사), 교육목표 진술(학습자 주어, 관찰 가능한 행동동사), 도입-전개-정리'};
 TOPIC[7]='프로그램 실행(실행계획, 추진체계·업무분담, 자원확보·일정, 모니터링·위기대응, 간트차트·PERT 차트)과 평가(평가 정의·목적, 평가접근 1~4수준, 로직모델 구조·과정·결과평가, 좋은 평가지표 조건), PRECEDE-PROCEED의 PROCEED 5~8단계(실행·과정평가·효과평가·결과평가), Ch.3~6 통합(이론→요구진단→목표→프로그램설계→실행→평가)';
 (async()=>{try{if(!window.claude||!claude.use)return;sampleFn=await claude.use('sample');}catch(e){sampleFn=null}render()})();
+// 독립 사이트(GitHub Pages)에서는 Supabase 서버를 거쳐 Claude API 호출 — API 키는 서버에만 있음
+const AI_URL='https://eorvsrlnilyvrhagtyqz.supabase.co/functions/v1/quiz-ai';
+const AI_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvcnZzcmxuaWx5dnJoYWd0eXF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5NzQwNDQsImV4cCI6MjEwNzU1MDA0NH0.-H1QW2IBEgz0qAPcNjUKGhLFZy9yqK5DGyQ5WQdQgBs';
+const useServer=()=>!sampleFn&&/github\.io$/.test(location.hostname);
+const aiReady=()=>!!sampleFn||useServer();
+const SUBJ_KO={cn:'지역사회영양학',ff:'기능성식품학',sj:'실험조리',dt:'식사요법 및 실습'};
+function aiTopic(){
+  const pick=(keys)=>week==='all'?R(keys):week;
+  if(SUBJ==='cn'){const w=Number(pick(['2','3','4','5','6','7']));
+    return {w,label:w+'주차',scope:TOPIC[w],ex:shuf(BANK.filter(q=>q.w===w&&q.k==='m')).slice(0,6).map(q=>q.q+' (정답: '+q.o[q.a]+')')}}
+  if(SUBJ==='ff'){const k=pick(Object.keys(FW));
+    return {w:Number(k),label:FW[k],scope:FW[k]+' 강의 범위',ex:shuf(FX.concat(FY).filter(q=>String(q[0])===String(k))).slice(0,6).map(q=>q[1]+' (정답: '+q[2][q[3]]+')')}}
+  if(SUBJ==='sj'){const k=pick(Object.keys(SW));
+    const ex=SMC.filter(q=>String(q[0])===String(k)).map(q=>q[1]+' (정답: '+q[2][q[3]]+')').concat(SOX.filter(q=>String(q[0])===String(k)).map(q=>q[1]+' ('+(q[2]?'O':'X')+')'));
+    return {w:Number(k),label:SW[k],scope:SW[k]+' 단원 (실험조리 교재·프린트 범위)',ex:shuf(ex).slice(0,6)}}
+  const k=pick(Object.keys(DTW));
+  return {w:k,label:DTW[k],scope:DTW[k]+' 식사요법 (영양사 국가시험 수준)',ex:shuf(DT.filter(q=>q[0]===k)).slice(0,6).map(q=>q[1]+' (정답: '+q[2][q[3]]+')')};
+}
+function aiPrompt(T){return `너는 한국 영양사 국가시험 출제위원이다. 대학 ${SUBJ_KO[SUBJ]} 과목의 '${T.label}' 범위로 5지선다 객관식 문제 5개를 새로 만들어라.
+범위 설명: ${T.scope}
+${T.ex.length?'아래는 이미 있는 문제다. 똑같이 베끼지 말고, 같은 개념을 다른 각도·사례·숫자로 묻는 새 문제를 만들어라.\n'+T.ex.map(x=>'- '+x).join('\n'):''}
+조건: 교과서적으로 확실한 사실만, 정답은 하나만 명확하게. 보기 5개, 정답 위치는 골고루. 해설 1~3문장, 계산문제면 해설에 【공식】 【풀이】를 줄바꿈으로. 사례형이면 사례 문장은 c에, 아니면 빈 문자열. 한국어. 랜덤 시드 ${Date.now()}
+JSON만 출력: {"questions":[{"q":"문제","c":"","o":["보기1","보기2","보기3","보기4","보기5"],"a":정답인덱스0~4,"e":"해설"}]}`}
+async function aiFetch(T){
+  if(sampleFn){const d=await sampleFn.json(aiPrompt(T),{cache:false,modelTier:'default'});return Array.isArray(d)?d:d.questions||[]}
+  const r=await fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+AI_ANON,apikey:AI_ANON},
+    body:JSON.stringify({subj:SUBJ,label:T.label,scope:T.scope,examples:T.ex})});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw {code:r.status===429?(d.error==='day'?'day':'ip'):d.error==='nokey'?'nokey':'server'};
+  return d.questions||[];
+}
 $('aiBtn').onclick=async()=>{
-  if(!sampleFn)return;const w=week==='all'?R([2,3,4,5,6,7]):Number(week);
-  const btn=$('aiBtn'),msg=$('aiMsg');btn.disabled=true;msg.textContent=`${w}주차 새 문제 만드는 중… (보통 10~40초)`;
-  const prompt=`너는 한국 영양사 국가시험 출제위원이다. 대학 지역사회영양학 ${w}주차 범위로 객관식 문제 5개를 새로 만들어라.
-범위: ${TOPIC[w]}
-조건: 매번 새로운 인물·상황·식품·질병을 사용한 사례형 문제 위주(최소 3개). 보기는 4개, 정답은 하나만 명확하게. 해설은 한두 문장. 한국어.
-랜덤 시드: ${Date.now()}
-JSON 배열만 출력: [{"q":"문제","c":"사례 문장(없으면 빈 문자열)","o":["보기1","보기2","보기3","보기4"],"a":정답인덱스0~3,"e":"해설"}]`;
+  if(!aiReady())return;const T=aiTopic(),subj=SUBJ;
+  const btn=$('aiBtn'),msg=$('aiMsg');btn.disabled=true;msg.textContent=`${T.label} 새 문제 만드는 중… (보통 10~40초)`;
   try{
-    const data=await sampleFn.json(prompt,{cache:false,modelTier:'default'});
-    const arr=(Array.isArray(data)?data:data.questions||[]).filter(x=>x&&x.q&&Array.isArray(x.o)&&x.o.length>=2&&Number.isInteger(x.a)&&x.a>=0&&x.a<x.o.length);
+    const arr=(await aiFetch(T)).filter(x=>x&&x.q&&Array.isArray(x.o)&&x.o.length>=2&&Number.isInteger(x.a)&&x.a>=0&&x.a<x.o.length);
     if(!arr.length)throw {code:'bad'};
-    const add=arr.map((x,i)=>({k:'m',w,q:String(x.q),c:String(x.c||''),o:x.o.map(String),a:x.a,e:String(x.e||''),ai:1,id:'ai'+Date.now()+i}));
-    SET=add.concat(SET);msg.textContent=`${w}주차 AI 문제 ${add.length}개를 맨 위에 추가했어요. AI 문제는 가끔 틀릴 수 있으니 해설을 꼭 확인하세요.`;
-    if(week!=='all'&&Number(week)!==w){}render();
-  }catch(e){msg.textContent=e&&e.code==='not_granted'?'AI 사용이 허용되지 않았어요.':e&&e.code==='rate_limited'?'요청이 많아요. 잠시 후 다시 눌러주세요.':'AI 문제를 만들지 못했어요. 다시 눌러주세요.'}
+    if(subj!==SUBJ)return;
+    const add=arr.map((x,i)=>{const o=shuf(x.o.map((v,j)=>({v:String(v),j})));
+      const q={k:'m',w:T.w,q:String(x.q),c:String(x.c||''),o:o.map(v=>v.v),a:o.findIndex(v=>v.j===x.a),e:String(x.e||''),ai:1,id:'ai'+Date.now()+i};
+      if(SUBJ==='sj')q.typ='mc';if(SUBJ==='dt')q.dt=1;return q});
+    if(SUBJ==='cn')SET=add.concat(SET);else if(SUBJ==='ff')FFSET=add.concat(FFSET);else if(SUBJ==='sj')SJSET=add.concat(SJSET);else DTSET=add.concat(DTSET);
+    msg.textContent=`${T.label} AI 문제 ${add.length}개를 맨 위에 추가했어요. AI 문제는 가끔 틀릴 수 있으니 해설을 꼭 확인하세요.`;
+    render();window.scrollTo({top:0});
+  }catch(e){const c=e&&e.code;msg.textContent=c==='not_granted'?'AI 사용이 허용되지 않았어요.':c==='rate_limited'?'요청이 많아요. 잠시 후 다시 눌러주세요.':
+    c==='ip'?'오늘 이 기기에서 쓸 수 있는 AI 문제 횟수를 다 썼어요. 내일 다시 써주세요.':c==='day'?'오늘 전체 AI 사용량이 다 찼어요. 내일 다시 써주세요.':
+    c==='nokey'?'AI 서버 설정이 아직 안 끝났어요.':'AI 문제를 만들지 못했어요. 다시 눌러주세요.'}
   finally{btn.disabled=false}
 };
 makeFF();setupSubject();newSet();
